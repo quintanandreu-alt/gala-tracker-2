@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1729">
+<title>Gala · Registre de preses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night-deep: #0a0f1f;
+    --night: #0f1729;
+    --night-soft: #1a2340;
+    --night-card: #161e36;
+    --indigo: #2a3458;
+    --moon: #e8d9a8;
+    --moon-soft: #c4b27d;
+    --cream: #f5ecd9;
+    --cream-soft: #ccc0a0;
+    --ink: #f5ecd9;
+    --ink-soft: #9a9ab0;
+    --ink-dim: #6b6f8a;
+    --accent: #f5b95a;
+    --accent-soft: #c89947;
+    --rose: #d97b6c;
+    --teal: #6db5a8;
+    --line: rgba(245, 236, 217, 0.08);
+    --line-strong: rgba(245, 236, 217, 0.15);
+    --good: #6db5a8;
+    --warn: #d97b6c;
+    --shadow: 0 1px 0 rgba(0,0,0,0.3), 0 20px 60px rgba(0,0,0,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--night-deep); color: var(--ink); font-family: 'Fraunces', serif; -webkit-font-smoothing: antialiased; }
+  body {
+    min-height: 100vh;
+    padding: 20px 16px 60px;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(245, 185, 90, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(109, 181, 168, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, var(--night) 0%, var(--night-deep) 100%);
+    position: relative;
+    overflow-x: hidden;
+  }
+  /* Subtle star texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(245, 236, 217, 0.15), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(245, 236, 217, 0.1), transparent),
+      radial-gradient(1px 1px at 80% 20%, rgba(245, 236, 217, 0.12), transparent),
+      radial-gradient(1px 1px at 30% 80%, rgba(245, 236, 217, 0.08), transparent),
+      radial-gradient(1px 1px at 90% 50%, rgba(245, 236, 217, 0.1), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 30px 0 36px;
+    position: relative;
+  }
+  header::before {
+    content: "☾";
+    display: block;
+    color: var(--moon);
+    font-size: 22px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(38px, 9vw, 56px);
+    letter-spacing: -0.025em;
+    color: var(--cream);
+    line-height: 1;
+  }
+  header h1 span {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  header p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--ink-dim);
+    margin-top: 14px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--night-card);
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 24px 22px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-dim);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-title::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* Entry form */
+  .entry-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .entry-form .full { grid-column: 1 / -1; }
+  label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    display: block;
+    margin-bottom: 8px;
+  }
+  input[type="date"], input[type="time"], input[type="number"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--cream);
+    background: var(--night-soft);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    color-scheme: dark;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  input::placeholder { color: var(--ink-dim); }
+  button.primary {
+    width: 100%;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--night-deep);
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  button.primary:hover { background: var(--moon); transform: translateY(-1px); }
+  button.primary:active { transform: translateY(0); }
+
+  /* Quick volume buttons */
+  .quick-vols { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .quick-vol {
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-vol:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Hero: night forecast */
+  .hero {
+    background: linear-gradient(135deg, var(--night-soft) 0%, var(--indigo) 100%);
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 26px 22px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 185, 90, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--moon-soft);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-main {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(40px, 11vw, 64px);
+    line-height: 1;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+  .hero-main .accent { color: var(--accent); font-style: normal; font-weight: 400; }
+  .hero-sub {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+  .hero-sub strong { color: var(--cream); font-weight: 500; }
+  .hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-mini {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .hero-mini-val {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--cream);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 4px;
+  }
+
+  /* Goal section (big) */
+  .goal-big {
+    background: linear-gradient(135deg, var(--night-soft) 0%, var(--indigo) 100%);
+    border-radius: 16px;
+    padding: 22px 20px;
+    border: 1px solid var(--line-strong);
+    position: relative;
+    overflow: hidden;
+  }
+  .goal-big::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(109, 181, 168, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .goal-big-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .goal-current { text-align: right; }
+  .goal-current-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(46px, 11vw, 64px);
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .goal-current-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--moon-soft);
+    margin-top: 4px;
+  }
+  .goal-divider {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(40px, 9vw, 54px);
+    color: var(--ink-dim);
+    line-height: 1;
+  }
+  .goal-target { text-align: left; }
+  .goal-target-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(46px, 11vw, 64px);
+    color: var(--cream);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .goal-target-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+  .goal-bar-wrap {
+    position: relative;
+    height: 12px;
+    background: rgba(245, 236, 217, 0.06);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .goal-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal) 0%, var(--accent) 100%);
+    border-radius: 6px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(245, 185, 90, 0.4);
+  }
+  .goal-bar-marker {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: rgba(245, 236, 217, 0.3);
+    border-radius: 1px;
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+  .goal-bar-marker::after {
+    content: 'ara';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .goal-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin-top: 12px;
+  }
+  .goal-bar-labels span:first-child { color: var(--accent); }
+
+  .goal-narrative {
+    background: var(--night-soft);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-top: 18px;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--cream);
+  }
+  .goal-narrative strong { color: var(--accent); font-weight: 500; }
+  .goal-narrative .neutral { color: var(--moon); font-weight: 500; }
+  .goal-narrative .below { color: var(--rose); font-weight: 500; }
+
+  /* Progress ring (kept for compat, unused now) */
+  .progress-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 12px;
+  }
+  .progress-ring { position: relative; flex-shrink: 0; }
+  .progress-ring svg { transform: rotate(-90deg); }
+  .progress-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .progress-pct {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--cream);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+  .progress-info { flex: 1; }
+  .progress-info-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--cream);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .progress-info-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .stat {
+    background: var(--night-soft);
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .stat-value .unit {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 300;
+    margin-left: 2px;
+  }
+  .stat-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+  }
+
+  /* Hour-band table */
+  .band-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line-strong);
+  }
+  .band-row:last-child { border-bottom: none; }
+  .band-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    min-width: 88px;
+  }
+  .band-time .icon { color: var(--moon); margin-right: 4px; }
+  .band-bar-wrap {
+    position: relative;
+    height: 24px;
+    background: var(--night-soft);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .band-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal) 0%, var(--accent) 100%);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .band-bar.empty {
+    background: var(--night-soft);
+  }
+  .band-val {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--cream);
+    font-weight: 500;
+    min-width: 70px;
+    text-align: right;
+  }
+  .band-val .small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Today's feed list */
+  .feed-list { list-style: none; }
+  .feed-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line-strong);
+  }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    background: var(--night-soft);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feed-info { display: flex; flex-direction: column; gap: 2px; }
+  .feed-time {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--cream);
+  }
+  .feed-time .icon { margin-right: 6px; color: var(--moon); font-size: 13px; }
+  .feed-time .icon.sun { color: var(--accent); }
+  .feed-cum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .feed-qty {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--cream);
+    font-weight: 400;
+  }
+  .feed-qty .unit { font-size: 11px; color: var(--ink-dim); margin-left: 2px; font-family: 'JetBrains Mono', monospace; }
+  .feed-del {
+    background: transparent;
+    border: none;
+    color: var(--ink-dim);
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 18px;
+    border-radius: 6px;
+  }
+  .feed-del:hover { color: var(--rose); }
+
+  /* Interval between feeds */
+  .feed-interval {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0 4px 38px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+  }
+  .feed-interval::before {
+    content: '';
+    flex-shrink: 0;
+    width: 1px;
+    height: 14px;
+    background: var(--line-strong);
+    margin-left: -25px;
+    margin-right: 14px;
+  }
+  .feed-interval.long { color: var(--teal); }
+  .feed-interval.short { color: var(--rose); }
+
+  /* Bedtime marker on goal bar */
+  .goal-bar-bedtime {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--moon);
+    border-radius: 1px;
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bedtime-label {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--moon);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .bedtime-label strong {
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .goal-bar-wrap { margin-top: 8px; margin-bottom: 32px; }
+
+  /* Daily totals */
+  .day-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    min-width: 56px;
+  }
+  .day-bar-wrap {
+    position: relative;
+    height: 26px;
+    background: var(--night-soft);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .day-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--indigo) 0%, var(--accent) 100%);
+    border-radius: 5px;
+    transition: width 0.4s ease;
+  }
+  .day-bar.partial { background: repeating-linear-gradient(45deg, var(--indigo) 0 8px, #344372 8px 16px); }
+  .day-total {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--cream);
+  }
+  .day-total .small { font-size: 10px; color: var(--ink-dim); font-family: 'JetBrains Mono', monospace; margin-left: 4px; letter-spacing: 0.05em; }
+
+  /* Day navigator */
+  .day-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--night-card);
+    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+  .day-nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: var(--night-soft);
+    color: var(--cream);
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .day-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .day-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .day-nav-btn:disabled:hover { border-color: var(--line-strong); color: var(--cream); }
+  .day-nav-label { text-align: center; flex: 1; cursor: pointer; }
+  .day-nav-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.1;
+  }
+  .day-nav-title.past {
+    font-style: italic;
+    color: var(--moon);
+  }
+  .day-nav-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    margin-top: 3px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    background: var(--night-card);
+    padding: 5px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+  .tab {
+    flex: 1;
+    padding: 11px;
+    background: transparent;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+  .tab.active { background: var(--night-soft); color: var(--cream); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Insights */
+  .insight {
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line-strong);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .insight:last-child { border-bottom: none; }
+  .insight-icon {
+    font-size: 11px;
+    width: 30px;
+    flex-shrink: 0;
+    text-align: center;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    padding-top: 3px;
+    letter-spacing: 0.1em;
+  }
+  .insight-text {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--cream);
+    line-height: 1.55;
+  }
+  .insight-text strong { color: var(--accent); font-weight: 500; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .footer-btn {
+    padding: 10px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .footer-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .footer-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-dim);
+    margin-top: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: var(--night-deep);
+    padding: 12px 22px;
+    border-radius: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 100;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* Forecast confidence indicator */
+  .confidence {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .confidence-dots { display: flex; gap: 3px; }
+  .confidence-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-dim); opacity: 0.3; }
+  .confidence-dot.on { background: var(--accent); opacity: 1; }
+
+  @media (max-width: 480px) {
+    .feed-item { grid-template-columns: auto 1fr auto auto; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Gala<span>.</span></h1>
+  <p>Diari nocturn de preses</p>
+</header>
+
+<!-- Entry form -->
+<div class="card">
+  <div class="card-title">Nova presa</div>
+  <form class="entry-form" id="entryForm">
+    <div>
+      <label for="date">Data</label>
+      <input type="date" id="date" required>
+    </div>
+    <div>
+      <label for="time">Hora</label>
+      <input type="time" id="time" required>
+    </div>
+    <div class="full">
+      <label for="qty">Quantitat (ml)</label>
+      <input type="number" id="qty" min="1" max="500" required placeholder="ex. 120" inputmode="numeric">
+      <div class="quick-vols">
+        <button type="button" class="quick-vol" data-v="60">60</button>
+        <button type="button" class="quick-vol" data-v="90">90</button>
+        <button type="button" class="quick-vol" data-v="100">100</button>
+        <button type="button" class="quick-vol" data-v="120">120</button>
+        <button type="button" class="quick-vol" data-v="150">150</button>
+        <button type="button" class="quick-vol" data-v="170">170</button>
+      </div>
+    </div>
+    <div class="full">
+      <button type="submit" class="primary">Afegir presa</button>
+    </div>
+  </form>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-tab="today">Avui</button>
+  <button class="tab" data-tab="patterns">Patrons</button>
+  <button class="tab" data-tab="history">Històric</button>
+</div>
+
+<!-- Avui -->
+<div class="tab-content active" id="tab-today">
+
+  <!-- Day navigator -->
+  <div class="day-nav">
+    <button class="day-nav-btn" id="dayPrev" aria-label="Dia anterior">‹</button>
+    <div class="day-nav-label">
+      <div class="day-nav-title" id="dayNavTitle">Avui</div>
+      <div class="day-nav-sub" id="dayNavSub">—</div>
+    </div>
+    <button class="day-nav-btn" id="dayNext" aria-label="Dia següent">›</button>
+  </div>
+  <!-- HERO: Night forecast -->
+  <div class="hero">
+    <div class="hero-label" id="heroLabel">☾ Pronòstic de la nit</div>
+    <div class="hero-main" id="forecastMain">—</div>
+    <div class="hero-sub" id="forecastSub">Encara no hi ha prou dades per pronosticar.</div>
+    <div class="hero-row">
+      <div>
+        <div class="hero-mini">Confiança</div>
+        <div class="confidence" style="margin-top: 6px;">
+          <div class="confidence-dots" id="confDots">
+            <span class="confidence-dot"></span>
+            <span class="confidence-dot"></span>
+            <span class="confidence-dot"></span>
+            <span class="confidence-dot"></span>
+            <span class="confidence-dot"></span>
+          </div>
+          <span id="confLabel">—</span>
+        </div>
+      </div>
+      <div style="text-align: right;" id="heroRightBlock">
+        <div class="hero-mini">Objectiu fins a 00:00</div>
+        <div class="hero-mini-val" id="targetGoal">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress to goal -->
+  <div class="card">
+    <div class="card-title">Objectiu diari · 24h</div>
+
+    <!-- Big number block -->
+    <div class="goal-big">
+      <div class="goal-big-row">
+        <div class="goal-current">
+          <div class="goal-current-num" id="goalCurrent">0</div>
+          <div class="goal-current-unit" id="goalCurrentUnit">ml avui</div>
+        </div>
+        <div class="goal-divider">/</div>
+        <div class="goal-target">
+          <div class="goal-target-num" id="goalTarget">—</div>
+          <div class="goal-target-unit">ml objectiu</div>
+        </div>
+      </div>
+
+      <!-- Linear progress bar -->
+      <div class="goal-bar-wrap">
+        <div class="goal-bar" id="goalBar" style="width: 0%"></div>
+        <div class="goal-bar-marker" id="goalBarMarker"></div>
+        <div class="goal-bar-bedtime" id="goalBarBedtime" style="left: 0%"></div>
+      </div>
+      <div class="goal-bar-labels">
+        <span><span id="goalPct">0%</span> · <span id="goalPctLabel">complet</span></span>
+        <span id="goalRemaining">— ml restants</span>
+      </div>
+    </div>
+
+    <!-- Detail stats -->
+    <div class="stats-grid" style="margin-top: 20px;">
+      <div class="stat">
+        <div class="stat-label">Mitjana diària</div>
+        <div class="stat-value" id="avgDailyStat">—<span class="unit">ml</span></div>
+        <div class="stat-sub" id="avgDailyStatSub">basat en dies complets</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Preses fetes</div>
+        <div class="stat-value" id="todayCount2">0</div>
+        <div class="stat-sub" id="todayCountSub">de ~— habituals</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Mitjana / presa avui</div>
+        <div class="stat-value" id="avgFeedToday">—<span class="unit">ml</span></div>
+        <div class="stat-sub" id="avgFeedTodaySub">vs ~— habitual</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Ritme respecte a l'hora</div>
+        <div class="stat-value" id="pace">—</div>
+        <div class="stat-sub" id="paceSub">vs progrés esperat</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Interval entre preses avui</div>
+        <div class="stat-value" id="intervalToday">—</div>
+        <div class="stat-sub" id="intervalTodaySub">vs ~— habitual</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Volum a anar a dormir</div>
+        <div class="stat-value" id="bedtimeStat">—<span class="unit">ml</span></div>
+        <div class="stat-sub" id="bedtimeStatSub">mitjana històrica</div>
+      </div>
+    </div>
+
+    <!-- Narrative summary -->
+    <div class="goal-narrative" id="goalNarrative">—</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" id="feedListTitle">Preses d'avui</div>
+    <ul class="feed-list" id="todayList">
+      <li style="text-align: center; color: var(--ink-dim); padding: 24px; font-style: italic; font-family: 'Fraunces', serif;">Encara no hi ha preses avui</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Patrons -->
+<div class="tab-content" id="tab-patterns">
+  <div class="card">
+    <div class="card-title">Què esperar segons l'hora</div>
+    <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; font-family: 'Fraunces', serif; line-height: 1.5;">Volum mitjà per franja horària basat en les dades registrades.</p>
+    <div id="hourBands"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Patró diari mitjà</div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Mitjana / dia</div>
+        <div class="stat-value" id="avgDay">—<span class="unit">ml</span></div>
+        <div class="stat-sub" id="avgDaySub">dies complets</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Mitjana / presa</div>
+        <div class="stat-value" id="avgFeed">—<span class="unit">ml</span></div>
+        <div class="stat-sub">no forçada</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Preses / dia</div>
+        <div class="stat-value" id="avgCount">—</div>
+        <div class="stat-sub">de mitjana</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Volum nocturn mitjà</div>
+        <div class="stat-value" id="avgNight">—<span class="unit">ml</span></div>
+        <div class="stat-sub">22h–06h</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Observacions</div>
+    <div id="insights"></div>
+  </div>
+</div>
+
+<!-- Històric -->
+<div class="tab-content" id="tab-history">
+  <div class="card">
+    <div class="card-title">Totals diaris</div>
+    <div id="dailyTotals"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Interval mitjà entre preses</div>
+    <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; font-family: 'Fraunces', serif; line-height: 1.5;">Quant de temps passa entre cada presa, per dia. Intervals més curts vol dir que menja més sovint.</p>
+    <div id="intervalsList"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-actions">
+    <button class="footer-btn" id="exportBtn">Exportar CSV</button>
+    <button class="footer-btn" id="importBtn">Importar CSV</button>
+    <input type="file" id="importInput" accept=".csv" style="display:none">
+    <button class="footer-btn" id="clearBtn">Esborrar tot</button>
+  </div>
+  <div class="footer-note">Les dades es guarden localment al navegador</div>
+</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ============== Initial seed data ==============
+const SEED_DATA = [
+  { date: '2026-05-09', time: '08:00', qty: 60 },
+  { date: '2026-05-09', time: '12:00', qty: 120 },
+  { date: '2026-05-09', time: '13:30', qty: 30 },
+  { date: '2026-05-09', time: '16:00', qty: 160 },
+  { date: '2026-05-09', time: '19:00', qty: 150 },
+  { date: '2026-05-09', time: '22:30', qty: 100 },
+  { date: '2026-05-09', time: '03:00', qty: 100 },
+  { date: '2026-05-10', time: '08:00', qty: 140 },
+  { date: '2026-05-10', time: '12:30', qty: 180 },
+  { date: '2026-05-10', time: '16:00', qty: 160 },
+  { date: '2026-05-10', time: '20:00', qty: 170 },
+  { date: '2026-05-10', time: '23:00', qty: 90 },
+  { date: '2026-05-10', time: '04:00', qty: 100 },
+  { date: '2026-05-11', time: '08:30', qty: 140 },
+  { date: '2026-05-11', time: '13:00', qty: 160 },
+  { date: '2026-05-11', time: '17:00', qty: 170 },
+  { date: '2026-05-11', time: '20:00', qty: 170 },
+  { date: '2026-05-11', time: '04:30', qty: 100 },
+  { date: '2026-05-12', time: '10:00', qty: 90 },
+  { date: '2026-05-12', time: '13:00', qty: 170 },
+  { date: '2026-05-12', time: '16:15', qty: 100 },
+  { date: '2026-05-12', time: '18:00', qty: 120 },
+  { date: '2026-05-12', time: '21:40', qty: 90 },
+  { date: '2026-05-12', time: '23:45', qty: 110 },
+  { date: '2026-05-12', time: '05:10', qty: 100 },
+  { date: '2026-05-13', time: '10:00', qty: 90 },
+  { date: '2026-05-13', time: '13:00', qty: 100 },
+  { date: '2026-05-13', time: '15:50', qty: 150 },
+  { date: '2026-05-13', time: '19:00', qty: 90 },
+  { date: '2026-05-13', time: '20:00', qty: 100 },
+];
+
+const STORAGE_KEY = 'gala_feeds_v3';
+const SEED_LOADED_KEY = 'gala_feeds_v3_seed';
+
+// CUTOFF for "before bed" = 00:00 (midnight). Pre-bed = feeds from 06:00 to before 00:00 of the same logical day.
+// Hour bands (24h, but logical day starts at 06:00)
+const HOUR_BANDS = [
+  { label: 'Matí', icon: '☀', start: 6, end: 11 },        // 06:00-10:59
+  { label: 'Migdia', icon: '☀', start: 11, end: 15 },     // 11:00-14:59
+  { label: 'Tarda', icon: '☀', start: 15, end: 19 },      // 15:00-18:59
+  { label: 'Vespre', icon: '☀', start: 19, end: 22 },     // 19:00-21:59
+  { label: 'Nit', icon: '☾', start: 22, end: 24 },        // 22:00-23:59
+  { label: 'Matinada', icon: '☾', start: 0, end: 6 },     // 00:00-05:59
+];
+
+// ============== State ==============
+let feeds = [];
+let viewedDay = null; // Which day the Today tab is showing. null = todayISO(). Otherwise an ISO date.
+
+function loadFeeds() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      feeds = JSON.parse(stored);
+    } else if (!localStorage.getItem(SEED_LOADED_KEY)) {
+      feeds = [...SEED_DATA];
+      localStorage.setItem(SEED_LOADED_KEY, '1');
+      saveFeeds();
+    }
+  } catch (e) { console.error(e); feeds = []; }
+}
+function saveFeeds() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(feeds)); } catch (e) { console.error(e); }
+}
+
+// ============== Helpers ==============
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function todayISO() {
+  // The day starts at 08:00. Before 08:00, we're still in "yesterday's" logical day.
+  const d = new Date();
+  if (d.getHours() < DAY_START_HOUR) {
+    d.setDate(d.getDate() - 1);
+  }
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+function realTodayISO() {
+  // Calendar date (for the date input default)
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+function nowTime() {
+  const d = new Date();
+  return pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function formatDate(iso) {
+  const [y, m, d] = iso.split('-');
+  return d + '/' + m;
+}
+function timeToMinutes(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+// The "day" runs from 08:00 to the next 08:00.
+// A feed before 08:00 belongs to the previous logical day (it's the nocturnal wake-up).
+const DAY_START_HOUR = 8;
+
+function isBeforeDayStart(t) {
+  return timeToMinutes(t) < DAY_START_HOUR * 60;
+}
+function isEarlyMorning(t) {
+  // Kept name for compatibility — same meaning: feeds that belong to the prior day's nocturnal session.
+  return isBeforeDayStart(t);
+}
+function isNightTime(t) {
+  // Visual cue: night icon for late evening or early morning
+  const m = timeToMinutes(t);
+  return m >= 22 * 60 || m < 6 * 60;
+}
+function logicalDay(feed) {
+  // The user already groups night feeds with the day they started (day begins at 08:00 conceptually).
+  // So we trust the date they entered as-is. No shifting.
+  return feed.date;
+}
+function sortFeeds(arr) {
+  return [...arr].sort((a, b) => {
+    const lda = logicalDay(a), ldb = logicalDay(b);
+    if (lda !== ldb) return lda < ldb ? -1 : 1;
+    // Within a logical day: feeds 08:00–23:59 come first, then early-morning feeds at the end
+    const ma = timeToMinutes(a.time), mb = timeToMinutes(b.time);
+    const aPrio = isBeforeDayStart(a.time) ? ma + 24 * 60 : ma;
+    const bPrio = isBeforeDayStart(b.time) ? mb + 24 * 60 : mb;
+    return aPrio - bPrio;
+  });
+}
+function groupByLogicalDay() {
+  const groups = {};
+  sortFeeds(feeds).forEach(f => {
+    const ld = logicalDay(f);
+    if (!groups[ld]) groups[ld] = [];
+    groups[ld].push(f);
+  });
+  return groups;
+}
+// Feed contributes to "pre-bed" (volum diürn fins anar a dormir): 06:00 to before 24:00 of same day.
+// Feeds before 06:00 are the nocturnal wake-up feeds (count toward day total but not pre-bed).
+function isPreBed(f) {
+  return !isEarlyMorning(f.time);
+}
+// Nocturnal: feeds after 22:00 (going-to-bed late feed) OR before 06:00 (night wake-up).
+function isNocturnal(f) {
+  return isEarlyMorning(f.time) || timeToMinutes(f.time) >= 22 * 60;
+}
+// The "wake-up" feed: the early-morning feed of the day (the one that wakes you up at night)
+function getWakeUpFeed(dayFeeds) {
+  return dayFeeds.find(f => isEarlyMorning(f.time));
+}
+// The "closing" feed: the last feed before midnight (after 06:00, before 24:00)
+function getClosingFeed(dayFeeds) {
+  const pre = dayFeeds.filter(isPreBed);
+  return pre.length ? pre[pre.length - 1] : null;
+}
+
+// ============== Stats ==============
+function dayStats(dayKey) {
+  const dayFeeds = groupByLogicalDay()[dayKey] || [];
+  const total = dayFeeds.reduce((s, f) => s + f.qty, 0);
+  const count = dayFeeds.length;
+  const preBed = dayFeeds.filter(isPreBed).reduce((s, f) => s + f.qty, 0);
+  const preBedCount = dayFeeds.filter(isPreBed).length;
+  const nightMl = dayFeeds.filter(isNocturnal).reduce((s, f) => s + f.qty, 0);
+  return { total, count, preBed, preBedCount, nightMl, feeds: dayFeeds };
+}
+function getCompletedDayKeys() {
+  const tToday = todayISO();
+  const groups = groupByLogicalDay();
+  // A day counts as "complete" if it's before today AND has at least 3 feeds
+  // (this filters out phantom days that only contain a stray nocturnal feed from
+  // an unregistered previous day)
+  return Object.keys(groups).filter(k => k < tToday && groups[k].length >= 3).sort();
+}
+function historicalAverages() {
+  const keys = getCompletedDayKeys();
+  if (keys.length === 0) return { avgTotal: 0, avgPreBed: 0, avgCount: 0, days: 0, avgPerFeed: 0, avgNight: 0 };
+  let sumTotal = 0, sumPreBed = 0, sumCount = 0, sumNight = 0;
+  keys.forEach(k => {
+    const s = dayStats(k);
+    sumTotal += s.total; sumPreBed += s.preBed; sumCount += s.count; sumNight += s.nightMl;
+  });
+  const n = keys.length;
+  return {
+    avgTotal: sumTotal / n, avgPreBed: sumPreBed / n, avgCount: sumCount / n,
+    avgPerFeed: sumTotal / keys.reduce((s, k) => s + dayStats(k).count, 0),
+    avgNight: sumNight / n, days: n,
+  };
+}
+
+// Mitjana del volum acumulat per quan se'n va al llit (entre les 23:00 i les 24:00).
+// Per cada dia complet, sumem totes les preses fins a les 24:00 (excloses les nocturnes
+// matinades), i fem la mitjana.
+function computeBedtimeAvgMl() {
+  const keys = getCompletedDayKeys();
+  if (keys.length === 0) return 0;
+  let sum = 0;
+  keys.forEach(k => {
+    const dayFeeds = groupByLogicalDay()[k];
+    // All feeds from this logical day that are NOT early-morning (i.e. before midnight)
+    // That's already the "preBed" total in dayStats.
+    sum += dayStats(k).preBed;
+  });
+  return sum / keys.length;
+}
+
+// Mitjanes d'intervals entre preses
+function computeIntervalsPerDay() {
+  const keys = getCompletedDayKeys();
+  const result = []; // [{day, intervalsHours: [...], avgHours}]
+  keys.forEach(k => {
+    const dayFeeds = groupByLogicalDay()[k];
+    const intervals = [];
+    for (let i = 1; i < dayFeeds.length; i++) {
+      const prev = dayFeeds[i - 1], cur = dayFeeds[i];
+      let prevMin = timeToMinutes(prev.time);
+      let curMin = timeToMinutes(cur.time);
+      // Within a logical day, early-morning feeds are conceptually "tomorrow morning"
+      if (isBeforeDayStart(prev.time)) prevMin += 24 * 60;
+      if (isBeforeDayStart(cur.time)) curMin += 24 * 60;
+      const diffH = (curMin - prevMin) / 60;
+      if (diffH > 0) intervals.push(diffH);
+    }
+    const avg = intervals.length ? intervals.reduce((a, b) => a + b, 0) / intervals.length : 0;
+    result.push({ day: k, intervals, avgHours: avg, count: dayFeeds.length });
+  });
+  return result;
+}
+
+// ============== Hour bands ==============
+function hourBandStats() {
+  const keys = getCompletedDayKeys();
+  const bands = HOUR_BANDS.map(b => ({ ...b, feeds: [], total: 0, perDay: 0 }));
+  keys.forEach(k => {
+    const dayFeeds = groupByLogicalDay()[k];
+    dayFeeds.forEach(f => {
+      const m = timeToMinutes(f.time);
+      const h = m / 60;
+      for (const band of bands) {
+        if (h >= band.start && h < band.end) {
+          band.feeds.push(f);
+          band.total += f.qty;
+          break;
+        }
+      }
+    });
+  });
+  bands.forEach(b => { b.perDay = keys.length ? b.total / keys.length : 0; });
+  return bands;
+}
+
+// ============== Wake-up prediction ==============
+// Strategy: use historical (closing-feed total ml, closing-feed time) -> wake-up time
+// Simple model: hour_of_wake = a + b1 * preBed_total + b2 * closing_hour
+// But with only 4 days, use a weighted-nearest-neighbour approach instead
+function predictWakeUp(currentPreBed, currentClosingTimeMin) {
+  const keys = getCompletedDayKeys();
+  const samples = [];
+  keys.forEach(k => {
+    const dayFeeds = groupByLogicalDay()[k];
+    const wake = getWakeUpFeed(dayFeeds);
+    const closing = getClosingFeed(dayFeeds);
+    const s = dayStats(k);
+    if (closing) {
+      let closingMin = timeToMinutes(closing.time);
+      // If closing < 06:00 then it's actually... shouldn't be (we filtered isPreBed). OK.
+      let wakeMin = null;
+      if (wake) {
+        wakeMin = timeToMinutes(wake.time) + 24 * 60; // normalize to "minutes past midnight start of nocturnal session"
+        // We'll express wake as minutes past closing
+      }
+      samples.push({
+        preBed: s.preBed,
+        closingMin: closingMin,
+        closingTime: closing.time,
+        wakeFeed: wake,
+        wakeTime: wake ? wake.time : null,
+        wakeMin: wakeMin,
+      });
+    }
+  });
+  if (samples.length === 0) return null;
+
+  // Weight samples by similarity: closer preBed total + closer closing time = higher weight
+  // Normalize: preBed diff in ml (scale ~100), closing time diff in min (scale ~60)
+  let totalW = 0;
+  let weightedWakeMin = 0;
+  let weightedFastingMin = 0; // minutes from closing to wake
+  const validSamples = samples.filter(s => s.wakeMin !== null);
+  if (validSamples.length === 0) {
+    return { kind: 'no-wake', samples };
+  }
+  validSamples.forEach(s => {
+    const preBedDiff = Math.abs(s.preBed - currentPreBed) / 100;
+    const closingDiff = Math.abs(s.closingMin - currentClosingTimeMin) / 60;
+    const dist = Math.sqrt(preBedDiff * preBedDiff + closingDiff * closingDiff);
+    const w = 1 / (1 + dist);
+    totalW += w;
+    weightedWakeMin += s.wakeMin * w;
+    const fasting = s.wakeMin - s.closingMin;
+    weightedFastingMin += fasting * w;
+  });
+  const predictedWakeMin = weightedWakeMin / totalW;
+  const predictedFasting = weightedFastingMin / totalW;
+  // Estimate via fasting + currentClosing for stability
+  const estimatedWakeMinFromNow = currentClosingTimeMin + predictedFasting;
+  // Variance of wake times
+  const wakeMins = validSamples.map(s => s.wakeMin);
+  const meanWake = wakeMins.reduce((a, b) => a + b, 0) / wakeMins.length;
+  const variance = wakeMins.reduce((a, b) => a + (b - meanWake) ** 2, 0) / wakeMins.length;
+  const stdDev = Math.sqrt(variance);
+
+  // Confidence: more data + lower variance = higher
+  let confidence = Math.min(5, validSamples.length);
+  if (stdDev > 90) confidence = Math.max(1, confidence - 2);
+  else if (stdDev > 60) confidence = Math.max(1, confidence - 1);
+
+  return {
+    kind: 'predicted',
+    wakeMinAbsolute: estimatedWakeMinFromNow, // minutes past midnight of new day
+    stdDev,
+    confidence,
+    samples: validSamples,
+    fastingHours: predictedFasting / 60,
+  };
+}
+function minToTimeStr(min) {
+  let m = ((min % (24 * 60)) + 24 * 60) % (24 * 60);
+  const h = Math.floor(m / 60);
+  const mm = Math.round(m % 60);
+  return pad(h) + ':' + pad(mm);
+}
+
+// ============== UI: Tabs ==============
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+  });
+});
+
+// ============== Form ==============
+function initForm() {
+  // Form uses real calendar date (what the user types when entering a feed)
+  document.getElementById('date').value = realTodayISO();
+  document.getElementById('time').value = nowTime();
+}
+document.getElementById('entryForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  try {
+    let date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const qtyStr = document.getElementById('qty').value;
+    const qty = parseInt(qtyStr, 10);
+    if (!date || !time || !qty || isNaN(qty) || qty < 1) {
+      showToast('Falta data, hora o ml');
+      return;
+    }
+    // If the feed is before 08:00, it belongs to the previous day's night.
+    // We shift the date back so it groups with the day that started yesterday at 08:00.
+    if (isBeforeDayStart(time)) {
+      const d = new Date(date + 'T12:00:00');
+      d.setDate(d.getDate() - 1);
+      date = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    }
+    feeds.push({ date, time, qty });
+    saveFeeds();
+    showToast(qty + ' ml afegits ✓');
+    document.getElementById('qty').value = '';
+    document.getElementById('date').value = realTodayISO();
+    document.getElementById('time').value = nowTime();
+    // If we were viewing a past day, jump back to today so the user sees the new feed
+    viewedDay = null;
+    render();
+  } catch (err) {
+    console.error('Error afegint presa:', err);
+    showToast('Error: ' + err.message);
+  }
+});
+document.querySelectorAll('.quick-vol').forEach(b => {
+  b.addEventListener('click', () => { document.getElementById('qty').value = b.dataset.v; });
+});
+
+// Day navigation
+document.getElementById('dayPrev').addEventListener('click', () => {
+  const today = todayISO();
+  const current = viewedDay || today;
+  const d = new Date(current + 'T12:00:00');
+  d.setDate(d.getDate() - 1);
+  viewedDay = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  render();
+});
+document.getElementById('dayNext').addEventListener('click', () => {
+  const today = todayISO();
+  const current = viewedDay || today;
+  if (current >= today) return;
+  const d = new Date(current + 'T12:00:00');
+  d.setDate(d.getDate() + 1);
+  const next = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  viewedDay = next >= today ? null : next;
+  render();
+});
+// Tap day title to jump back to today
+document.querySelector('.day-nav-label').addEventListener('click', () => {
+  if (viewedDay) { viewedDay = null; render(); }
+});
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+function deleteFeed(idx) {
+  if (!confirm('Esborrar aquesta presa?')) return;
+  feeds.splice(idx, 1);
+  saveFeeds();
+  render();
+}
+
+// ============== Render: Today ==============
+function updateDayNav(dayKey, today) {
+  const titleEl = document.getElementById('dayNavTitle');
+  const subEl = document.getElementById('dayNavSub');
+  const prevBtn = document.getElementById('dayPrev');
+  const nextBtn = document.getElementById('dayNext');
+
+  const isToday = dayKey === today;
+  if (isToday) {
+    titleEl.textContent = 'Avui';
+    titleEl.className = 'day-nav-title';
+    subEl.textContent = formatDate(dayKey);
+  } else {
+    // Calculate distance from today
+    const dToday = new Date(today + 'T12:00:00');
+    const dViewed = new Date(dayKey + 'T12:00:00');
+    const diffDays = Math.round((dToday - dViewed) / (1000 * 60 * 60 * 24));
+    let label = '';
+    if (diffDays === 1) label = 'Ahir';
+    else if (diffDays === 2) label = 'Abans-d\'ahir';
+    else label = 'Fa ' + diffDays + ' dies';
+    titleEl.textContent = label;
+    titleEl.className = 'day-nav-title past';
+    subEl.textContent = formatDate(dayKey);
+  }
+
+  // Disable next button if we're on today
+  nextBtn.disabled = isToday;
+
+  // Disable prev button if there's no earlier day with data
+  const allKeys = Object.keys(groupByLogicalDay()).sort();
+  const earliest = allKeys[0];
+  prevBtn.disabled = dayKey <= earliest;
+}
+
+function renderToday() {
+  const today = todayISO();
+  const dayKey = viewedDay || today;
+  const isToday = dayKey === today;
+  const tStats = dayStats(dayKey);
+  const hist = historicalAverages();
+
+  // Update day navigator
+  updateDayNav(dayKey, today);
+
+  // ===== Daily goal section (24h total) =====
+  const goalTarget = Math.round(hist.avgTotal) || 770; // fallback ~770 ml
+  const current = tStats.total;
+  const pct = goalTarget > 0 ? Math.min(150, Math.round((current / goalTarget) * 100)) : 0;
+  const remaining = Math.max(0, goalTarget - current);
+
+  document.getElementById('goalCurrent').textContent = current;
+  document.getElementById('goalCurrentUnit').textContent = isToday ? 'ml avui' : 'ml aquell dia';
+  document.getElementById('goalTarget').textContent = goalTarget;
+  document.getElementById('goalBar').style.width = Math.min(100, pct) + '%';
+  document.getElementById('goalPct').textContent = pct + '%';
+
+  // % label
+  let pctLabel = 'complet';
+  if (pct >= 100) pctLabel = 'objectiu assolit ✓';
+  else if (pct >= 90) pctLabel = 'gairebé!';
+  document.getElementById('goalPctLabel').textContent = pctLabel;
+
+  // Remaining
+  if (remaining > 0) {
+    const word = isToday ? 'restants' : 'per sota';
+    document.getElementById('goalRemaining').textContent = remaining + ' ml ' + word;
+  } else {
+    const surplus = current - goalTarget;
+    document.getElementById('goalRemaining').textContent = surplus > 0 ? '+' + surplus + ' ml extra' : 'objectiu just';
+  }
+
+  // Expected progress at current time. Day = 08:00 → 08:00 next day.
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  let dayElapsedMin;
+  if (nowMin >= DAY_START_HOUR * 60) {
+    dayElapsedMin = nowMin - DAY_START_HOUR * 60;
+  } else {
+    dayElapsedMin = (nowMin + 24 * 60) - DAY_START_HOUR * 60;
+  }
+  const expectedPct = Math.min(100, Math.round((dayElapsedMin / (24 * 60)) * 100));
+  const expectedMl = Math.round((dayElapsedMin / (24 * 60)) * goalTarget);
+
+  // Position the "ara" marker (only for today)
+  const marker = document.getElementById('goalBarMarker');
+  if (isToday) {
+    marker.style.display = 'block';
+    marker.style.left = expectedPct + '%';
+  } else {
+    marker.style.display = 'none';
+  }
+
+  // "anar a dormir" marker
+  const bedtimeAvg = computeBedtimeAvgMl();
+  const bedtimePct = goalTarget > 0 ? Math.min(100, (bedtimeAvg / goalTarget) * 100) : 0;
+  const bedtimeMarker = document.getElementById('goalBarBedtime');
+  if (hist.days > 0 && bedtimeAvg > 0) {
+    bedtimeMarker.style.display = 'block';
+    bedtimeMarker.style.left = bedtimePct + '%';
+    bedtimeMarker.innerHTML = '<span class="bedtime-label">☾ <strong>' + Math.round(bedtimeAvg) + ' ml</strong> a dormir</span>';
+  } else {
+    bedtimeMarker.style.display = 'none';
+  }
+
+  // Pace stat (only meaningful for today)
+  const paceEl = document.getElementById('pace');
+  const paceSubEl = document.getElementById('paceSub');
+  if (!isToday) {
+    // For past days, show total vs goal
+    const dDelta = current - goalTarget;
+    paceEl.innerHTML = (dDelta >= 0 ? '+' : '') + dDelta + '<span class="unit">ml</span>';
+    paceEl.style.color = dDelta > 0 ? 'var(--teal)' : (dDelta < -50 ? 'var(--rose)' : 'var(--moon)');
+    paceSubEl.textContent = 'vs objectiu diari';
+  } else {
+    const paceDelta = current - expectedMl;
+    if (hist.days === 0) {
+      paceEl.textContent = '—';
+      paceSubEl.textContent = 'sense històric';
+    } else if (paceDelta > 30) {
+      paceEl.innerHTML = '+' + paceDelta + '<span class="unit">ml</span>';
+      paceEl.style.color = 'var(--teal)';
+      paceSubEl.textContent = 'per davant del previst';
+    } else if (paceDelta < -30) {
+      paceEl.innerHTML = paceDelta + '<span class="unit">ml</span>';
+      paceEl.style.color = 'var(--rose)';
+      paceSubEl.textContent = 'per sota del previst';
+    } else {
+      paceEl.innerHTML = (paceDelta >= 0 ? '+' : '') + paceDelta + '<span class="unit">ml</span>';
+      paceEl.style.color = 'var(--moon)';
+      paceSubEl.textContent = 'al ritme previst';
+    }
+  }
+
+  // Avg daily stat
+  document.getElementById('avgDailyStat').innerHTML = (hist.avgTotal ? Math.round(hist.avgTotal) : '—') + '<span class="unit">ml</span>';
+  document.getElementById('avgDailyStatSub').textContent = hist.days + ' ' + (hist.days === 1 ? 'dia complet' : 'dies complets');
+
+  // Today count
+  document.getElementById('todayCount2').textContent = tStats.count;
+  document.getElementById('todayCountSub').textContent = hist.avgCount ? 'de ~' + hist.avgCount.toFixed(1) + ' habituals' : 'sense referència';
+
+  // Avg per feed today
+  const avgFeedToday = tStats.count > 0 ? Math.round(tStats.total / tStats.count) : 0;
+  document.getElementById('avgFeedToday').innerHTML = (avgFeedToday || '—') + '<span class="unit">ml</span>';
+  const avgFeedHist = hist.avgPerFeed ? Math.round(hist.avgPerFeed) : 0;
+  if (avgFeedHist > 0 && avgFeedToday > 0) {
+    const d = avgFeedToday - avgFeedHist;
+    const sign = d > 0 ? '+' : '';
+    document.getElementById('avgFeedTodaySub').textContent = sign + d + ' vs ~' + avgFeedHist + ' habitual';
+  } else {
+    document.getElementById('avgFeedTodaySub').textContent = avgFeedHist ? 'vs ~' + avgFeedHist + ' habitual' : 'sense referència';
+  }
+
+  // Interval between feeds today vs historical
+  const todayIntervalsH = [];
+  for (let i = 1; i < tStats.feeds.length; i++) {
+    let prevMin = timeToMinutes(tStats.feeds[i - 1].time);
+    let curMin = timeToMinutes(tStats.feeds[i].time);
+    if (isBeforeDayStart(tStats.feeds[i - 1].time)) prevMin += 24 * 60;
+    if (isBeforeDayStart(tStats.feeds[i].time)) curMin += 24 * 60;
+    const diffH = (curMin - prevMin) / 60;
+    if (diffH > 0) todayIntervalsH.push(diffH);
+  }
+  const avgIntToday = todayIntervalsH.length ? todayIntervalsH.reduce((a, b) => a + b, 0) / todayIntervalsH.length : 0;
+  // Historical avg interval across completed days
+  const histIntervalsData = computeIntervalsPerDay();
+  const histAvgInt = histIntervalsData.length
+    ? histIntervalsData.reduce((s, d) => s + d.avgHours, 0) / histIntervalsData.length
+    : 0;
+  const intervalEl = document.getElementById('intervalToday');
+  const intervalSubEl = document.getElementById('intervalTodaySub');
+  function fmtHours(h) {
+    const hh = Math.floor(h);
+    const mm = Math.round((h - hh) * 60);
+    return hh + 'h' + (mm < 10 ? '0' : '') + mm;
+  }
+  if (avgIntToday > 0) {
+    intervalEl.textContent = fmtHours(avgIntToday);
+    if (histAvgInt > 0) {
+      const diff = avgIntToday - histAvgInt;
+      const absDiff = Math.abs(diff);
+      const sign = diff > 0 ? '+' : '−';
+      const diffH = Math.floor(absDiff);
+      const diffM = Math.round((absDiff - diffH) * 60);
+      let diffTxt = '';
+      if (diffH > 0) diffTxt += diffH + 'h';
+      if (diffM > 0) diffTxt += (diffM < 10 ? '0' : '') + diffM + 'min';
+      if (!diffTxt) diffTxt = '0min';
+      intervalSubEl.textContent = sign + diffTxt + ' vs ~' + fmtHours(histAvgInt) + ' habitual';
+      // Color: shorter intervals (eating more often) → rose; longer → teal
+      if (diff < -0.4) intervalEl.style.color = 'var(--rose)';
+      else if (diff > 0.4) intervalEl.style.color = 'var(--teal)';
+      else intervalEl.style.color = 'var(--cream)';
+    } else {
+      intervalSubEl.textContent = 'sense referència';
+    }
+  } else {
+    intervalEl.textContent = '—';
+    intervalSubEl.textContent = tStats.feeds.length === 1 ? 'cal una segona presa' : 'sense referència';
+  }
+
+  // Bedtime avg ml
+  const bedtimeAvgStat = computeBedtimeAvgMl();
+  const bedtimeEl = document.getElementById('bedtimeStat');
+  const bedtimeSubEl = document.getElementById('bedtimeStatSub');
+  if (bedtimeAvgStat > 0) {
+    bedtimeEl.innerHTML = Math.round(bedtimeAvgStat) + '<span class="unit">ml</span>';
+    // Today's accumulated until now (only "pre-bed" feeds, i.e. between 08:00 and 24:00)
+    const preBedToday = tStats.preBed;
+    const delta = preBedToday - bedtimeAvgStat;
+    if (preBedToday === 0) {
+      bedtimeSubEl.textContent = 'objectiu abans de dormir';
+    } else if (delta >= 0) {
+      bedtimeSubEl.innerHTML = '<span style="color: var(--teal);">+' + Math.round(delta) + ' ml avui ja</span>';
+    } else {
+      bedtimeSubEl.innerHTML = 'falten ' + Math.round(-delta) + ' ml';
+    }
+  } else {
+    bedtimeEl.innerHTML = '—<span class="unit">ml</span>';
+    bedtimeSubEl.textContent = 'sense històric';
+  }
+
+  // Narrative
+  const narrEl = document.getElementById('goalNarrative');
+  if (hist.days === 0) {
+    narrEl.innerHTML = 'Encara no hi ha històric per calcular un objectiu. Registra almenys un dia complet.';
+  } else if (!isToday) {
+    // Past day: simple summary
+    let narrative = '';
+    if (current >= goalTarget * 1.1) {
+      narrative = 'Aquell dia va menjar <strong>més del normal</strong> (' + current + ' ml vs ~' + goalTarget + ' habituals).';
+    } else if (current >= goalTarget * 0.95) {
+      narrative = 'Aquell dia va menjar <span class="neutral">al nivell habitual</span> (' + current + ' ml).';
+    } else {
+      narrative = 'Aquell dia va menjar <span class="below">menys del normal</span> (' + current + ' ml vs ~' + goalTarget + ' habituals).';
+    }
+    narrEl.innerHTML = narrative;
+  } else {
+    let narrative = '';
+    const feedsToGo = avgFeedHist > 0 ? Math.ceil(remaining / avgFeedHist) : 0;
+    const paceDeltaNow = current - expectedMl;
+    if (current >= goalTarget) {
+      narrative = 'Ja ha arribat al volum diari habitual (<span class="neutral">' + goalTarget + ' ml</span>). ';
+      if (current >= goalTarget * 1.1) narrative += 'Avui menja <strong>més del normal</strong>.';
+      else narrative += 'Volum diari complet.';
+    } else if (paceDeltaNow > 30) {
+      narrative = 'Va <strong>per davant del ritme habitual</strong> (' + current + ' ml vs ~' + expectedMl + ' esperats a aquesta hora). ';
+      narrative += 'Li queden <strong>' + remaining + ' ml</strong>, uns ~' + feedsToGo + ' preses fins a tancar les 24h.';
+    } else if (paceDeltaNow < -30) {
+      narrative = 'Va <span class="below">per sota del ritme</span> (' + current + ' ml vs ~' + expectedMl + ' esperats). ';
+      narrative += 'Li queden <strong>' + remaining + ' ml</strong> per arribar a la mitjana, uns ~' + feedsToGo + ' preses de ' + avgFeedHist + ' ml.';
+    } else {
+      narrative = 'Va <span class="neutral">al ritme habitual</span>. ';
+      narrative += 'Li queden <strong>' + remaining + ' ml</strong> (~' + feedsToGo + ' preses) per arribar a la mitjana de ' + goalTarget + ' ml.';
+    }
+    narrEl.innerHTML = narrative;
+  }
+
+  // ===== Night forecast (hero) - or actual result if past day =====
+  document.getElementById('heroLabel').textContent = isToday ? '☾ Pronòstic de la nit' : '☾ Com va anar la nit';
+  document.getElementById('heroRightBlock').style.display = isToday ? '' : 'none';
+  if (isToday) {
+    renderForecast(tStats, hist, Math.round(hist.avgPreBed) || 650);
+  } else {
+    renderPastDayResult(tStats, dayKey);
+  }
+
+  // ===== Feed list =====
+  document.getElementById('feedListTitle').textContent = isToday ? 'Preses d\'avui' : 'Preses d\'aquell dia';
+  const listEl = document.getElementById('todayList');
+  if (tStats.feeds.length === 0) {
+    const emptyMsg = isToday ? 'Encara no hi ha preses avui' : 'Sense preses registrades aquell dia';
+    listEl.innerHTML = '<li style="text-align: center; color: var(--ink-dim); padding: 24px; font-style: italic; font-family: Fraunces, serif;">' + emptyMsg + '</li>';
+  } else {
+    listEl.innerHTML = '';
+    let cum = 0;
+    tStats.feeds.forEach((f, i) => {
+      // Interval since previous feed
+      if (i > 0) {
+        const prev = tStats.feeds[i - 1];
+        let prevMin = timeToMinutes(prev.time);
+        let curMin = timeToMinutes(f.time);
+        if (isBeforeDayStart(prev.time)) prevMin += 24 * 60;
+        if (isBeforeDayStart(f.time)) curMin += 24 * 60;
+        const diffMin = curMin - prevMin;
+        const h = Math.floor(diffMin / 60);
+        const m = Math.round(diffMin % 60);
+        const txt = (h > 0 ? h + 'h ' : '') + (m > 0 ? m + ' min' : '').trim();
+        let cls = '';
+        if (diffMin >= 4.5 * 60) cls = 'long';
+        else if (diffMin < 2 * 60) cls = 'short';
+        const intvLi = document.createElement('li');
+        intvLi.className = 'feed-interval ' + cls;
+        intvLi.innerHTML = '↕ ' + (txt || '0 min');
+        listEl.appendChild(intvLi);
+      }
+      cum += f.qty;
+      const iconClass = isNightTime(f.time) ? '' : 'sun';
+      const iconChar = isNightTime(f.time) ? '☾' : '☀';
+      const globalIdx = feeds.findIndex(x => x.date === f.date && x.time === f.time && x.qty === f.qty);
+      const li = document.createElement('li');
+      li.className = 'feed-item';
+      li.innerHTML =
+        '<span class="feed-num">' + (i + 1) + '</span>' +
+        '<div class="feed-info">' +
+          '<span class="feed-time"><span class="icon ' + iconClass + '">' + iconChar + '</span>' + f.time + '</span>' +
+          '<span class="feed-cum">' + cum + ' ml acumulat</span>' +
+        '</div>' +
+        '<span class="feed-qty">' + f.qty + '<span class="unit">ml</span></span>' +
+        '<button class="feed-del" data-idx="' + globalIdx + '" aria-label="Esborrar">×</button>';
+      listEl.appendChild(li);
+    });
+    listEl.querySelectorAll('.feed-del').forEach(btn => {
+      btn.addEventListener('click', () => deleteFeed(parseInt(btn.dataset.idx, 10)));
+    });
+  }
+}
+
+function renderForecast(tStats, hist, goal) {
+  const closing = getClosingFeed(tStats.feeds);
+  const mainEl = document.getElementById('forecastMain');
+  const subEl = document.getElementById('forecastSub');
+  const dots = document.querySelectorAll('#confDots .confidence-dot');
+  const confLabel = document.getElementById('confLabel');
+
+  dots.forEach(d => d.classList.remove('on'));
+
+  if (hist.days < 2) {
+    mainEl.innerHTML = '<span style="font-size: 24px;">Calen més dies</span>';
+    subEl.innerHTML = 'Cal almenys <strong>2 dies complets</strong> registrats per fer pronòstic. Ara n\'hi ha ' + hist.days + '.';
+    confLabel.textContent = 'sense dades';
+    return;
+  }
+
+  if (!closing) {
+    // No closing feed yet today — predict based on average
+    const avgClosingMin = (function() {
+      const keys = getCompletedDayKeys();
+      let sum = 0, n = 0;
+      keys.forEach(k => {
+        const c = getClosingFeed(groupByLogicalDay()[k]);
+        if (c) { sum += timeToMinutes(c.time); n++; }
+      });
+      return n ? sum / n : 22 * 60;
+    })();
+    const pred = predictWakeUp(tStats.preBed, avgClosingMin);
+    if (!pred || pred.kind === 'no-wake') {
+      mainEl.innerHTML = '<span style="font-size: 28px;">Sense dades de despertar</span>';
+      subEl.innerHTML = 'En els dies complets registrats no he detectat preses nocturnes per estimar.';
+      return;
+    }
+    const wakeStr = minToTimeStr(pred.wakeMinAbsolute);
+    mainEl.innerHTML = '~<span class="accent">' + wakeStr + '</span>';
+    subEl.innerHTML = 'Estimació provisional (sense última presa encara). Es refinarà quan registris la presa de tancament.';
+    for (let i = 0; i < Math.min(pred.confidence, 5); i++) dots[i].classList.add('on');
+    confLabel.textContent = pred.confidence + '/5';
+    return;
+  }
+
+  // We have a closing feed today
+  const closingMin = timeToMinutes(closing.time);
+  const pred = predictWakeUp(tStats.preBed, closingMin);
+
+  if (!pred || pred.kind === 'no-wake') {
+    mainEl.innerHTML = '<span style="font-size: 26px;">Sense dades suficients</span>';
+    subEl.innerHTML = 'Encara no hi ha històric de despertars nocturns per fer una previsió.';
+    return;
+  }
+
+  const wakeStr = minToTimeStr(pred.wakeMinAbsolute);
+  const std = Math.round(pred.stdDev);
+  const lowerStr = minToTimeStr(pred.wakeMinAbsolute - pred.stdDev);
+  const upperStr = minToTimeStr(pred.wakeMinAbsolute + pred.stdDev);
+  const fastingH = pred.fastingHours.toFixed(1);
+
+  mainEl.innerHTML = '~<span class="accent">' + wakeStr + '</span>';
+
+  // Compose narrative
+  let narrative = 'Després de l\'última presa (' + closing.time + ' · ' + closing.qty + ' ml), basant-me en patrons similars: ';
+  narrative += '<strong>despertar probable entre ' + lowerStr + ' i ' + upperStr + '</strong> ';
+  narrative += '(~' + fastingH + 'h d\'autonomia). ';
+
+  // Compare to 8:00 ideal
+  const idealWakeMin = 8 * 60 + 24 * 60; // 08:00 next day = 32:00
+  const diffMin = idealWakeMin - pred.wakeMinAbsolute;
+  if (diffMin > 60) {
+    narrative += 'Es despertarà <strong>' + Math.round(diffMin / 60 * 10) / 10 + 'h abans</strong> de l\'objectiu de les 8h.';
+  } else if (diffMin > 0) {
+    narrative += 'Faltarà només ~' + Math.round(diffMin) + ' min per a les 8h ideals.';
+  } else {
+    narrative += 'Possible nit completa fins a les 8h! 🌅';
+  }
+
+  subEl.innerHTML = narrative;
+
+  for (let i = 0; i < Math.min(pred.confidence, 5); i++) dots[i].classList.add('on');
+  let label = '';
+  if (pred.confidence >= 4) label = 'alta';
+  else if (pred.confidence >= 3) label = 'mitjana';
+  else label = 'baixa';
+  confLabel.textContent = label + ' · ' + pred.confidence + '/5';
+}
+
+// ============== Render: Patterns ==============
+function renderPastDayResult(tStats, dayKey) {
+  const mainEl = document.getElementById('forecastMain');
+  const subEl = document.getElementById('forecastSub');
+  const dots = document.querySelectorAll('#confDots .confidence-dot');
+  const confLabel = document.getElementById('confLabel');
+
+  dots.forEach(d => d.classList.remove('on'));
+  confLabel.textContent = 'realitat';
+
+  const wake = getWakeUpFeed(tStats.feeds);
+  const closing = getClosingFeed(tStats.feeds);
+
+  if (wake) {
+    mainEl.innerHTML = '<span class="accent">' + wake.time + '</span>';
+    let narrative = '';
+    if (closing) {
+      // Calculate fasting hours
+      let closingMin = timeToMinutes(closing.time);
+      let wakeMin = timeToMinutes(wake.time);
+      if (isBeforeDayStart(wake.time)) wakeMin += 24 * 60;
+      if (isBeforeDayStart(closing.time)) closingMin += 24 * 60;
+      const fastingH = (wakeMin - closingMin) / 60;
+      narrative = 'Última presa: <strong>' + closing.time + ' · ' + closing.qty + ' ml</strong>. ';
+      narrative += 'Va dormir <strong>' + fastingH.toFixed(1) + 'h</strong> abans de despertar-se a les <strong>' + wake.time + ' (' + wake.qty + ' ml)</strong>.';
+    } else {
+      narrative = 'Es va despertar a les <strong>' + wake.time + '</strong> (' + wake.qty + ' ml).';
+    }
+    subEl.innerHTML = narrative;
+  } else if (closing) {
+    mainEl.innerHTML = '<span style="font-size: 28px;">Sense despertar registrat</span>';
+    subEl.innerHTML = 'Última presa: <strong>' + closing.time + ' · ' + closing.qty + ' ml</strong>. No hi ha cap presa nocturna registrada per aquest dia.';
+  } else {
+    mainEl.innerHTML = '<span style="font-size: 28px;">Sense dades</span>';
+    subEl.innerHTML = 'No hi ha preses registrades aquell dia.';
+  }
+}
+
+function renderPatterns() {
+  const hist = historicalAverages();
+  document.getElementById('avgDay').innerHTML = (hist.avgTotal ? Math.round(hist.avgTotal) : '—') + '<span class="unit">ml</span>';
+  document.getElementById('avgDaySub').textContent = hist.days + ' ' + (hist.days === 1 ? 'dia' : 'dies') + ' complets';
+  document.getElementById('avgFeed').innerHTML = (hist.avgPerFeed ? Math.round(hist.avgPerFeed) : '—') + '<span class="unit">ml</span>';
+  document.getElementById('avgCount').textContent = hist.avgCount ? hist.avgCount.toFixed(1) : '—';
+  document.getElementById('avgNight').innerHTML = (hist.avgNight ? Math.round(hist.avgNight) : '—') + '<span class="unit">ml</span>';
+
+  // Hour bands
+  const bands = hourBandStats();
+  const maxPerDay = Math.max(...bands.map(b => b.perDay), 1);
+  const container = document.getElementById('hourBands');
+  container.innerHTML = '';
+  bands.forEach(b => {
+    const pct = (b.perDay / maxPerDay) * 100;
+    const hourLabel = pad(b.start) + 'h–' + (b.end === 24 ? '00' : pad(b.end)) + 'h';
+    const hasFeeds = b.perDay > 0;
+    const row = document.createElement('div');
+    row.className = 'band-row';
+    row.innerHTML =
+      '<span class="band-time"><span class="icon">' + b.icon + '</span>' + b.label + ' <span style="color: var(--ink-dim); font-size: 10px;">' + hourLabel + '</span></span>' +
+      '<div class="band-bar-wrap"><div class="band-bar ' + (hasFeeds ? '' : 'empty') + '" style="width: ' + pct + '%"></div></div>' +
+      '<span class="band-val">' + (hasFeeds ? Math.round(b.perDay) + '<span class="unit" style="font-family: JetBrains Mono; font-size: 10px; color: var(--ink-dim);"> ml</span>' : '—') +
+      '<span class="small">' + (b.feeds.length ? (b.feeds.length / Math.max(1, getCompletedDayKeys().length)).toFixed(1) + ' preses/dia' : '—') + '</span></span>';
+    container.appendChild(row);
+  });
+
+  // Insights
+  renderInsights();
+}
+
+function renderInsights() {
+  const hist = historicalAverages();
+  const obs = [];
+
+  if (hist.days >= 1) {
+    obs.push({
+      icon: '01',
+      text: 'Patró habitual: <strong>' + Math.round(hist.avgTotal) + ' ml/dia</strong> en <strong>' + hist.avgCount.toFixed(1) + ' preses</strong> (~' + Math.round(hist.avgPerFeed) + ' ml cadascuna).'
+    });
+    obs.push({
+      icon: '02',
+      text: 'Acumulat habitual <strong>abans de les 00:00</strong>: <strong>' + Math.round(hist.avgPreBed) + ' ml</strong>. És l\'objectiu de cara a la nit.'
+    });
+    if (hist.avgNight > 0) {
+      const nightPct = Math.round((hist.avgNight / hist.avgTotal) * 100);
+      obs.push({
+        icon: '03',
+        text: 'La nit (22h–06h) suposa el <strong>' + nightPct + '%</strong> del volum diari (~' + Math.round(hist.avgNight) + ' ml).'
+      });
+    }
+  }
+
+  // Best night analysis
+  const keys = getCompletedDayKeys();
+  if (keys.length >= 2) {
+    const dayDetails = keys.map(k => {
+      const dayFeeds = groupByLogicalDay()[k];
+      const wake = getWakeUpFeed(dayFeeds);
+      const closing = getClosingFeed(dayFeeds);
+      const s = dayStats(k);
+      return {
+        key: k,
+        preBed: s.preBed,
+        closingTime: closing ? closing.time : null,
+        wakeTime: wake ? wake.time : null,
+        wakeMin: wake ? timeToMinutes(wake.time) : null,
+      };
+    });
+    // Day with latest wake
+    const wakeDays = dayDetails.filter(d => d.wakeMin !== null);
+    if (wakeDays.length >= 2) {
+      wakeDays.sort((a, b) => b.wakeMin - a.wakeMin);
+      const best = wakeDays[0], worst = wakeDays[wakeDays.length - 1];
+      obs.push({
+        icon: '04',
+        text: 'Millor nit: <strong>' + formatDate(best.key) + '</strong> (despertar a les ' + best.wakeTime + ' amb ' + best.preBed + ' ml + tancament a les ' + best.closingTime + '). Pitjor: <strong>' + formatDate(worst.key) + '</strong> (despertar a les ' + worst.wakeTime + ').'
+      });
+    }
+  }
+
+  obs.push({
+    icon: '05',
+    text: 'Hora objectiu de despertar: <strong>08:00</strong>. Mira la previsió a la pestanya "Avui" un cop registrada l\'última presa.'
+  });
+
+  const insightsEl = document.getElementById('insights');
+  insightsEl.innerHTML = '';
+  obs.forEach(o => {
+    const div = document.createElement('div');
+    div.className = 'insight';
+    div.innerHTML = '<span class="insight-icon">' + o.icon + '</span><span class="insight-text">' + o.text + '</span>';
+    insightsEl.appendChild(div);
+  });
+}
+
+// ============== Render: History ==============
+function renderHistory() {
+  const groups = groupByLogicalDay();
+  // Show today + any logical day with at least 3 feeds (hides phantom days
+  // that are just a stray nocturnal feed from an unregistered prior day)
+  const today = todayISO();
+  const keys = Object.keys(groups).filter(k => k === today || groups[k].length >= 3).sort();
+  const maxTotal = Math.max(...keys.map(k => dayStats(k).total), 1);
+
+  const container = document.getElementById('dailyTotals');
+  container.innerHTML = '';
+  keys.forEach(k => {
+    const s = dayStats(k);
+    const pct = (s.total / maxTotal) * 100;
+    const isToday = k === today;
+    const wake = getWakeUpFeed(groups[k]);
+    const wakeInfo = wake ? ' · 🌙 ' + wake.time : '';
+    const row = document.createElement('div');
+    row.className = 'day-row';
+    row.innerHTML =
+      '<span class="day-date">' + formatDate(k) + (isToday ? ' ⋯' : '') + '</span>' +
+      '<div class="day-bar-wrap"><div class="day-bar ' + (isToday ? 'partial' : '') + '" style="width: ' + pct + '%"></div></div>' +
+      '<span class="day-total">' + s.total + '<span class="small">ml · ' + s.count + 'p' + wakeInfo + '</span></span>';
+    container.appendChild(row);
+  });
+
+  // Intervals
+  renderIntervals();
+}
+
+function renderIntervals() {
+  const intervalsContainer = document.getElementById('intervalsList');
+  if (!intervalsContainer) return;
+  const data = computeIntervalsPerDay();
+
+  // Also include today (partial)
+  const today = todayISO();
+  const todayFeeds = groupByLogicalDay()[today];
+  if (todayFeeds && todayFeeds.length >= 2) {
+    const intervals = [];
+    for (let i = 1; i < todayFeeds.length; i++) {
+      let prevMin = timeToMinutes(todayFeeds[i - 1].time);
+      let curMin = timeToMinutes(todayFeeds[i].time);
+      if (isBeforeDayStart(todayFeeds[i - 1].time)) prevMin += 24 * 60;
+      if (isBeforeDayStart(todayFeeds[i].time)) curMin += 24 * 60;
+      const diffH = (curMin - prevMin) / 60;
+      if (diffH > 0) intervals.push(diffH);
+    }
+    const avg = intervals.length ? intervals.reduce((a, b) => a + b, 0) / intervals.length : 0;
+    data.push({ day: today, intervals, avgHours: avg, count: todayFeeds.length, partial: true });
+  }
+
+  if (data.length === 0) {
+    intervalsContainer.innerHTML = '<p style="font-size: 13px; color: var(--ink-dim); font-style: italic; font-family: Fraunces, serif;">Falten dades.</p>';
+    return;
+  }
+
+  // Compute historical average interval (completed days only)
+  const completed = data.filter(d => !d.partial);
+  const avgInterval = completed.length
+    ? completed.reduce((s, d) => s + d.avgHours, 0) / completed.length
+    : 0;
+
+  // Range for bar scaling
+  const maxAvg = Math.max(...data.map(d => d.avgHours), 1);
+
+  intervalsContainer.innerHTML = '';
+  data.forEach(d => {
+    const isToday = d.day === today;
+    const h = Math.floor(d.avgHours);
+    const m = Math.round((d.avgHours - h) * 60);
+    const txt = h + 'h ' + (m < 10 ? '0' : '') + m + 'min';
+    const pct = (d.avgHours / maxAvg) * 100;
+
+    // Min/max for the day
+    const min = Math.min(...d.intervals);
+    const max = Math.max(...d.intervals);
+    const minH = Math.floor(min), minM = Math.round((min - minH) * 60);
+    const maxH = Math.floor(max), maxM = Math.round((max - maxH) * 60);
+
+    // Compare to historical avg
+    let trend = '';
+    if (!isToday && avgInterval > 0) {
+      const diff = d.avgHours - avgInterval;
+      if (Math.abs(diff) >= 0.25) {
+        const sign = diff > 0 ? '+' : '';
+        trend = ' ' + sign + diff.toFixed(1) + 'h';
+      }
+    }
+
+    const row = document.createElement('div');
+    row.className = 'day-row';
+    row.innerHTML =
+      '<span class="day-date">' + formatDate(d.day) + (isToday ? ' ⋯' : '') + '</span>' +
+      '<div class="day-bar-wrap"><div class="day-bar ' + (isToday ? 'partial' : '') + '" style="width: ' + pct + '%"></div></div>' +
+      '<span class="day-total">' + txt + '<span class="small">' + minH + 'h' + (minM < 10 ? '0' : '') + minM + ' – ' + maxH + 'h' + (maxM < 10 ? '0' : '') + maxM + trend + '</span></span>';
+    intervalsContainer.appendChild(row);
+  });
+
+  // Summary line at the end
+  if (completed.length >= 2) {
+    const summary = document.createElement('div');
+    summary.style.cssText = 'margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-family: Fraunces, serif; font-size: 14px; color: var(--cream); line-height: 1.5;';
+    const avgH = Math.floor(avgInterval);
+    const avgM = Math.round((avgInterval - avgH) * 60);
+    // Trend: today vs avg
+    const todayData = data.find(d => d.day === today);
+    let trendTxt = '';
+    if (todayData && todayData.avgHours > 0) {
+      const diff = todayData.avgHours - avgInterval;
+      if (diff < -0.4) trendTxt = '<br><span style="color: var(--rose);">Avui menja <strong>més sovint</strong> de l\'habitual.</span>';
+      else if (diff > 0.4) trendTxt = '<br><span style="color: var(--teal);">Avui menja <strong>menys sovint</strong> de l\'habitual.</span>';
+      else trendTxt = '<br><span style="color: var(--moon);">Avui menja al <strong>ritme habitual</strong>.</span>';
+    }
+    summary.innerHTML = 'Interval mitjà històric: <strong style="color: var(--accent);">' + avgH + 'h ' + (avgM < 10 ? '0' : '') + avgM + 'min</strong>' + trendTxt;
+    intervalsContainer.appendChild(summary);
+  }
+}
+
+function render() {
+  renderToday();
+  renderPatterns();
+  renderHistory();
+}
+
+// ============== Export / Import ==============
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = [['date', 'time', 'qty']];
+  sortFeeds(feeds).forEach(f => rows.push([f.date, f.time, f.qty]));
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gala_preses_' + todayISO() + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exportat ✓');
+});
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importInput').click();
+});
+document.getElementById('importInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const lines = ev.target.result.trim().split(/\r?\n/);
+      const imported = [];
+      for (let i = 1; i < lines.length; i++) {
+        const [date, time, qty] = lines[i].split(',');
+        if (date && time && qty) imported.push({ date: date.trim(), time: time.trim(), qty: parseInt(qty, 10) });
+      }
+      if (imported.length > 0 && confirm('Importar ' + imported.length + ' preses? (substituirà les actuals)')) {
+        feeds = imported;
+        saveFeeds();
+        render();
+        showToast(imported.length + ' preses importades ✓');
+      }
+    } catch (err) { alert('Error: ' + err.message); }
+  };
+  reader.readAsText(file);
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (confirm('Segur que vols esborrar TOTES les preses? (recomanat exportar abans)')) {
+    feeds = [];
+    saveFeeds();
+    render();
+    showToast('Tot esborrat');
+  }
+});
+
+// ============== Init ==============
+loadFeeds();
+initForm();
+render();
+</script>
+</body>
+</html>
