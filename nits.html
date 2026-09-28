@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#171412">
+<title>Gala · Nits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Night milk palette */
+    --bg: #171412;
+    --surface: #211d1a;
+    --surface-soft: #2b2521;
+    --surface-hover: #342c27;
+    --border: #3d342e;
+    --border-strong: #50443b;
+    --text: #f5eee7;
+    --text-soft: #cfc2b7;
+    --text-dim: #9d8f84;
+    --accent: #b7a089;
+    --accent-soft: #302820;
+    --accent-deep: #d0b696;
+    --bottle: #d98b6f;
+    --bottle-soft: #3a251f;
+    --sleep: #9d91c7;
+    --sleep-soft: #29243a;
+    --nap: #c9a15a;
+    --nap-soft: #342a1a;
+    --good: #8db58f;
+    --warn: #d09a68;
+    --danger: #d57878;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body { min-height: 100vh; padding: 12px 16px 60px; }
+  .container { max-width: 720px; margin: 0 auto; }
+
+  header {
+    padding: 8px 4px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .header-main { display: flex; align-items: baseline; gap: 10px; }
+  header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  header h1 span { color: var(--sleep); }
+  header p { font-size: 12px; color: var(--text-dim); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    position: sticky;
+    top: 8px;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
+  }
+  .tab {
+    flex: 1;
+    padding: 9px 6px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-soft);
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { background: var(--sleep); color: var(--bg); font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fade 0.2s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    letter-spacing: -0.005em;
+  }
+  .card-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: -10px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  /* Day navigator */
+  .day-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+  .day-nav-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-soft);
+    font-family: inherit; font-size: 18px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .day-nav-btn:hover { border-color: var(--sleep); color: var(--sleep); }
+  .day-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .day-nav-btn svg { pointer-events: none; }
+  .day-cal-input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer; border: none; padding: 0;
+    background: transparent; color: transparent;
+  }
+  .day-cal-input::-webkit-calendar-picker-indicator {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    background: transparent; color: transparent; cursor: pointer;
+  }
+  .day-nav-label { text-align: center; flex: 1; position: relative; border-radius: 6px; padding: 4px 6px; }
+  .day-nav-title { font-size: 16px; font-weight: 600; line-height: 1.1; }
+  .day-nav-title.past { color: var(--sleep); }
+  .day-nav-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  /* Active night banner */
+  .active-night {
+    background: var(--sleep-soft);
+    border: 1px solid var(--sleep);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .active-night-icon { font-size: 30px; color: var(--sleep); flex-shrink: 0; }
+  .active-night-info { flex: 1; min-width: 0; }
+  .active-night-label { font-size: 11px; font-weight: 600; color: var(--sleep); margin-bottom: 2px; }
+  .active-night-since { font-size: 13px; color: var(--text-soft); }
+  .active-night-dur { font-size: 22px; font-weight: 700; margin-top: 4px; letter-spacing: -0.02em; }
+
+  /* Big start button */
+  .start-night-btn {
+    width: 100%;
+    padding: 20px;
+    background: var(--sleep);
+    color: var(--bg);
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s;
+    margin-bottom: 14px;
+  }
+  .start-night-btn:hover { background: #afa3d5; }
+  .start-night-btn .icon { font-size: 22px; }
+
+  /* Time chips */
+  .night-times {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .time-field { flex: 1; }
+  .time-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .time-input-wrap { display: flex; gap: 6px; align-items: stretch; }
+  input[type="time"], input[type="date"], input[type="number"], input.ttime {
+    width: 100%;
+    padding: 11px 12px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface-soft);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+    color-scheme: dark;
+  }
+  input:focus { outline: none; border-color: var(--sleep); box-shadow: 0 0 0 3px var(--sleep-soft); }
+  .time-now-btn {
+    flex-shrink: 0;
+    padding: 0 12px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .time-now-btn:hover { border-color: var(--sleep); color: var(--sleep); }
+  .time-clear {
+    flex-shrink: 0;
+    padding: 0 10px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    color: var(--text-dim);
+    font-family: inherit; font-size: 14px;
+    cursor: pointer;
+  }
+  .time-clear:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* Stats grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 4px; }
+  .stat {
+    background: var(--surface-soft);
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .stat.wide { grid-column: 1 / -1; }
+  .stat-label { font-size: 11px; color: var(--text-dim); font-weight: 500; margin-bottom: 4px; }
+  .stat-value { font-size: 22px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+  .stat-value.ml { color: var(--bottle); }
+  .stat-value.wake { color: var(--sleep); }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Wakeup list */
+  .wake-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin: 18px 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wake-list { list-style: none; }
+  .wake-row {
+    display: grid;
+    grid-template-columns: 30px 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .wake-row:last-child { border-bottom: none; }
+  .wake-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--sleep-soft);
+    color: var(--sleep);
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wake-row input.wake-time { padding: 9px 8px; font-size: 15px; }
+  .wake-ml-wrap { position: relative; }
+  .wake-row input.wake-ml { padding: 9px 8px; padding-right: 30px; font-size: 15px; text-align: right; }
+  .wake-ml-unit {
+    position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--text-dim); pointer-events: none;
+  }
+  .wake-ml.zero { color: var(--text-dim); }
+  .wake-del {
+    background: transparent; border: none; color: var(--text-dim);
+    font-size: 18px; cursor: pointer; padding: 4px 6px; line-height: 1;
+  }
+  .wake-del:hover { color: var(--danger); }
+  .wake-empty { text-align: center; color: var(--text-dim); padding: 16px 0; font-size: 13px; }
+
+  .add-wake-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 13px;
+    background: var(--sleep-soft);
+    border: 1px solid var(--sleep);
+    border-radius: 10px;
+    color: var(--sleep);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .add-wake-btn:hover { background: var(--surface-hover); }
+
+  .end-night-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .end-night-btn:hover { border-color: var(--sleep); color: var(--sleep); }
+
+  /* Trend headline */
+  .trend-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .trend-box {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .trend-label { font-size: 11px; color: var(--text-dim); font-weight: 500; margin-bottom: 6px; }
+  .trend-value { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .trend-value.ml { color: var(--bottle); }
+  .trend-value.wake { color: var(--sleep); }
+  .trend-delta { font-size: 11px; font-weight: 600; margin-top: 6px; }
+  .trend-delta.down { color: var(--good); }
+  .trend-delta.up { color: var(--warn); }
+  .trend-delta.flat { color: var(--text-dim); }
+
+  /* Evolution chart */
+  .chart-period {
+    display: flex; gap: 4px; margin-bottom: 12px;
+  }
+  .chart-period-btn {
+    flex: 1; padding: 6px 4px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-family: inherit; font-size: 11px; font-weight: 500;
+    color: var(--text-dim); cursor: pointer; transition: all 0.15s;
+  }
+  .chart-period-btn.active { background: var(--sleep); color: var(--bg); font-weight: 600; }
+  .metric-toggle { display: flex; gap: 4px; margin-bottom: 12px; }
+  .metric-btn {
+    flex: 1; padding: 8px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    color: var(--text-dim); cursor: pointer; transition: all 0.15s;
+  }
+  .metric-btn.active { border-color: var(--accent); color: var(--text); }
+  .metric-btn.active.ml { border-color: var(--bottle); color: var(--bottle); }
+  .metric-btn.active.wake { border-color: var(--sleep); color: var(--sleep); }
+  .chart-svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-daily-line { fill: none; stroke-width: 1; opacity: 0.35; }
+  .chart-trend-line { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-avg-line { stroke: var(--text-dim); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.4; }
+  .chart-axis-dates { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; font-size: 11px; color: var(--text-soft); }
+  .chart-legend-item { display: flex; align-items: center; gap: 5px; }
+  .chart-legend-dot { width: 10px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+  .chart-empty { text-align: center; color: var(--text-dim); padding: 16px 0; font-size: 12px; }
+
+  /* History list */
+  .night-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .night-row:last-child { border-bottom: none; }
+  .night-date { font-size: 13px; font-weight: 500; min-width: 62px; color: var(--text-soft); }
+  .night-bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .night-dots { display: flex; gap: 3px; align-items: center; }
+  .night-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sleep); }
+  .night-dot.feed { background: var(--bottle); }
+  .night-meta { font-size: 13px; font-weight: 600; text-align: right; }
+  .night-meta .small { display: block; font-size: 11px; font-weight: 400; color: var(--text-dim); margin-top: 2px; }
+  .night-empty { text-align: center; color: var(--text-dim); padding: 20px; font-size: 13px; }
+
+  /* Footer */
+  footer { text-align: center; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border); }
+  .footer-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .footer-btn {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    color: var(--text-soft);
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .footer-btn:hover { border-color: var(--sleep); color: var(--sleep); }
+  .footer-note { font-size: 11px; color: var(--text-dim); margin-top: 14px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent); color: var(--bg);
+    padding: 12px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    opacity: 0; transition: all 0.25s ease; z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="header-main">
+    <h1>Gala<span>.</span></h1>
+    <p>Nits &amp; despertars</p>
+  </div>
+</header>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-tab="night">Nit</button>
+  <button class="tab" data-tab="history">Històric</button>
+</div>
+
+<!-- Nit tab -->
+<div class="tab-content active" id="tab-night">
+
+  <!-- Day navigator -->
+  <div class="day-nav">
+    <button class="day-nav-btn" id="navPrev" aria-label="Nit anterior">‹</button>
+    <div class="day-nav-label">
+      <div class="day-nav-title" id="navTitle">Aquesta nit</div>
+      <div class="day-nav-sub" id="navSub">—</div>
+      <input type="date" id="navCalLabel" class="day-cal-input" aria-label="Tria una nit">
+    </div>
+    <button class="day-nav-btn" id="navCalBtn" aria-label="Calendari">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <input type="date" id="navCalInput" class="day-cal-input" aria-label="Tria una nit">
+    </button>
+    <button class="day-nav-btn" id="navNext" aria-label="Nit següent">›</button>
+  </div>
+
+  <!-- Active night banner (in progress) -->
+  <div class="active-night" id="activeBanner" style="display:none;">
+    <div class="active-night-icon">☾</div>
+    <div class="active-night-info">
+      <div class="active-night-label">NIT EN CURS</div>
+      <div class="active-night-since" id="activeSince">Des de —</div>
+      <div class="active-night-dur" id="activeDur">—</div>
+    </div>
+  </div>
+
+  <!-- Start button (only when today's night not started) -->
+  <button class="start-night-btn" id="startNightBtn" style="display:none;">
+    <span class="icon">☾</span> Comença la nit
+  </button>
+
+  <!-- Night card -->
+  <div class="card" id="nightCard">
+    <div class="night-times">
+      <div class="time-field">
+        <label>Comença la nit</label>
+        <div class="time-input-wrap">
+          <input type="text" inputmode="numeric" pattern="[0-9:]*" maxlength="5" placeholder="HH:MM" autocomplete="off" id="nightStart" class="ttime">
+          <button class="time-now-btn" id="startNow">ara</button>
+        </div>
+      </div>
+      <div class="time-field">
+        <label>Acaba (matí)</label>
+        <div class="time-input-wrap">
+          <input type="text" inputmode="numeric" pattern="[0-9:]*" maxlength="5" placeholder="HH:MM" autocomplete="off" id="nightEnd" class="ttime">
+          <button class="time-now-btn" id="endNow">ara</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Despertars</div>
+        <div class="stat-value wake" id="statWakes">—</div>
+        <div class="stat-sub" id="statWakesSub">aquesta nit</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Preses (menja)</div>
+        <div class="stat-value" id="statFeeds">—</div>
+        <div class="stat-sub" id="statFeedsSub">amb biberó</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total ml nit</div>
+        <div class="stat-value ml" id="statMl">—</div>
+        <div class="stat-sub">llet nocturna</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Son seguit més llarg</div>
+        <div class="stat-value" id="statStretch">—</div>
+        <div class="stat-sub" id="statStretchSub">sense despertar</div>
+      </div>
+    </div>
+
+    <!-- Wakeups -->
+    <div class="wake-section-title">
+      <span>Despertars de la nit</span>
+    </div>
+    <ul class="wake-list" id="wakeList"></ul>
+    <button class="add-wake-btn" id="addWakeBtn">+ Despertar</button>
+    <button class="end-night-btn" id="endNightBtn" style="display:none;">Marca el final de la nit (ara)</button>
+  </div>
+
+  <!-- 7-night averages -->
+  <div class="card">
+    <div class="card-title">Mitjana de les últimes nits</div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Despertars / nit</div>
+        <div class="stat-value wake" id="avgWakes">—</div>
+        <div class="stat-sub" id="avgWakesSub">últimes 7 nits</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">ml / nit</div>
+        <div class="stat-value ml" id="avgMl">—</div>
+        <div class="stat-sub">últimes 7 nits</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Històric tab -->
+<div class="tab-content" id="tab-history">
+
+  <!-- Trend headline -->
+  <div class="card">
+    <div class="card-title">Aquesta setmana vs anterior</div>
+    <p class="card-sub">L'objectiu és que aquests números baixin.</p>
+    <div class="trend-head">
+      <div class="trend-box">
+        <div class="trend-label">Despertars / nit</div>
+        <div class="trend-value wake" id="trendWakes">—</div>
+        <div class="trend-delta flat" id="trendWakesDelta">—</div>
+      </div>
+      <div class="trend-box">
+        <div class="trend-label">ml / nit</div>
+        <div class="trend-value ml" id="trendMl">—</div>
+        <div class="trend-delta flat" id="trendMlDelta">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evolution chart -->
+  <div class="card">
+    <div class="card-title">Evolució</div>
+    <div class="metric-toggle">
+      <button class="metric-btn wake active" data-metric="wakes">Despertars</button>
+      <button class="metric-btn ml" data-metric="ml">ml nocturns</button>
+      <button class="metric-btn" data-metric="stretch">Son seguit</button>
+    </div>
+    <div class="chart-period">
+      <button class="chart-period-btn" data-period="7">Setm.</button>
+      <button class="chart-period-btn" data-period="14">Quinz.</button>
+      <button class="chart-period-btn active" data-period="30">Mes</button>
+      <button class="chart-period-btn" data-period="9999">Tot</button>
+    </div>
+    <div id="chartArea"></div>
+  </div>
+
+  <!-- Nights list -->
+  <div class="card">
+    <div class="card-title">Totes les nits</div>
+    <p class="card-sub">Toca una nit per editar-la.</p>
+    <div id="nightsList"></div>
+  </div>
+
+  <footer>
+    <div class="footer-actions">
+      <button class="footer-btn" id="exportBtn">Exportar</button>
+      <button class="footer-btn" id="importBtn">Importar</button>
+      <input type="file" id="importInput" accept=".json,.csv" style="display:none">
+      <button class="footer-btn" id="clearBtn">Esborrar tot</button>
+    </div>
+    <div class="footer-note">Les dades es guarden localment al navegador</div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ============== Storage ==============
+const STORAGE_KEY = 'gala_nits_v1';
+// nights: [{ id, date:'YYYY-MM-DD' (evening date), start:'HH:MM'|null, end:'HH:MM'|null, wakes:[{id,time,ml}] }]
+let nights = [];
+let viewedDate = null; // null = current night
+let chartMetric = 'wakes';
+let chartPeriod = 30;
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) nights = JSON.parse(raw);
+  } catch (e) { console.error(e); nights = []; }
+}
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(nights)); } catch (e) { console.error(e); }
+}
+
+// ============== Helpers ==============
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function nowTime() { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+function todayISO() { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function isoOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function addDays(iso, n) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return isoOf(d); }
+function timeToMin(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+function genId() { return 'n_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6); }
+
+// ---- Keyboard time entry (HH:MM) ----
+// Live mask while typing: keep digits (+ one colon), auto-insert colon after 2 digits.
+function maskTimeLive(raw) {
+  let v = (raw || '').replace(/[^0-9:]/g, '');
+  const c = v.indexOf(':');
+  if (c !== -1) v = v.slice(0, c + 1) + v.slice(c + 1).replace(/:/g, '');
+  if (v.indexOf(':') === -1 && v.length > 2) v = v.slice(0, 2) + ':' + v.slice(2);
+  return v.slice(0, 5);
+}
+// Normalize a typed value to a valid HH:MM (or null if empty/invalid).
+function normalizeTime(raw) {
+  if (!raw) return null;
+  const parts = raw.split(':');
+  let digits;
+  if (parts.length === 2 && parts[0] !== '' ) {
+    // "23:4" / "9:30" style
+    let h = parts[0].replace(/\D/g, ''), m = parts[1].replace(/\D/g, '');
+    if (h === '') return null;
+    digits = (h.length === 1 ? '0' + h : h.slice(0, 2)) + (m === '' ? '00' : (m.length === 1 ? m + '0' : m.slice(0, 2)));
+  } else {
+    digits = raw.replace(/\D/g, '');
+    if (digits.length === 0) return null;
+    if (digits.length === 1) digits = '0' + digits + '00';      // 3 -> 03:00
+    else if (digits.length === 2) digits = digits + '00';       // 23 -> 23:00
+    else if (digits.length === 3) digits = '0' + digits;        // 930 -> 09:30
+    digits = digits.slice(0, 4);
+  }
+  let h = parseInt(digits.slice(0, 2), 10);
+  let m = parseInt(digits.slice(2, 4), 10);
+  if (isNaN(h) || isNaN(m)) return null;
+  if (h > 23) h = 23;
+  if (m > 59) m = 59;
+  return pad(h) + ':' + pad(m);
+}
+// Attach masking + normalization to a text time input. onCommit(normalizedOrNull).
+function attachTimeMask(el, onCommit) {
+  el.addEventListener('input', () => {
+    el.value = maskTimeLive(el.value);
+  });
+  el.addEventListener('change', () => {
+    const norm = normalizeTime(el.value);
+    el.value = norm || '';
+    onCommit(norm);
+  });
+  el.addEventListener('blur', () => {
+    const norm = normalizeTime(el.value);
+    if ((norm || '') !== el.value) el.value = norm || '';
+  });
+}
+
+// The evening date of the "current" night:
+//  - if there's a night in progress (start set, no end), use its date
+//  - else before noon → last night (yesterday's evening), else tonight (today)
+function currentNightDate() {
+  const active = nights.find(n => n.start && !n.end);
+  if (active) return active.date;
+  const h = new Date().getHours();
+  return h < 12 ? addDays(todayISO(), -1) : todayISO();
+}
+
+// Absolute Date for an event time within a night (handles crossing midnight).
+// A time earlier than the night's start (or before ~12:00 when no start) belongs to the next morning.
+function eventDate(night, time) {
+  const base = night.date;
+  const tMin = timeToMin(time);
+  const startMin = night.start ? timeToMin(night.start) : 12 * 60; // assume evening starts by noon boundary
+  // If the event time is before the start-of-night reference, it's the next calendar day
+  const iso = tMin < startMin ? addDays(base, 1) : base;
+  return new Date(iso + 'T' + time + ':00');
+}
+
+function getNight(date) {
+  return nights.find(n => n.date === date) || null;
+}
+// Ensure a night object exists for a date (create empty if needed)
+function ensureNight(date) {
+  let n = getNight(date);
+  if (!n) {
+    n = { id: genId(), date: date, start: null, end: null, wakes: [] };
+    nights.push(n);
+  }
+  return n;
+}
+// Remove empty nights (no start, end, or wakes) so they don't clutter history
+function pruneEmpty() {
+  nights = nights.filter(n => n.start || n.end || (n.wakes && n.wakes.length));
+}
+
+function sortedWakes(night) {
+  return [...(night.wakes || [])].sort((a, b) => eventDate(night, a.time) - eventDate(night, b.time));
+}
+
+// ============== Night stats ==============
+function nightStats(night) {
+  const wakes = sortedWakes(night);
+  const wakeCount = wakes.length;
+  const feeds = wakes.filter(w => (w.ml || 0) > 0);
+  const totalMl = feeds.reduce((s, w) => s + (w.ml || 0), 0);
+  // Longest stretch without waking: gaps between start→first wake→...→last wake→end
+  let longest = null;
+  const points = [];
+  if (night.start) points.push(eventDate(night, night.start));
+  wakes.forEach(w => points.push(eventDate(night, w.time)));
+  if (night.end) points.push(eventDate(night, night.end));
+  for (let i = 1; i < points.length; i++) {
+    const gap = (points[i] - points[i - 1]) / 60000;
+    if (gap > 0 && (longest === null || gap > longest)) longest = gap;
+  }
+  // Night duration
+  let durMin = null;
+  if (night.start && night.end) {
+    durMin = (eventDate(night, night.end) - eventDate(night, night.start)) / 60000;
+  }
+  return { wakeCount, feedCount: feeds.length, totalMl, longestStretch: longest, durMin };
+}
+
+function fmtDur(min) {
+  if (min == null) return '—';
+  min = Math.round(min);
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  if (h === 0) return m + ' min';
+  if (m === 0) return h + 'h';
+  return h + 'h ' + (m < 10 ? '0' : '') + m;
+}
+
+function formatNightDate(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  const days = ['dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'];
+  return days[d.getDay()] + ' ' + d.getDate() + '/' + pad(d.getMonth() + 1);
+}
+
+// Nights that have any real data, sorted by date
+function recordedNights() {
+  return nights.filter(n => n.start || n.end || (n.wakes && n.wakes.length))
+    .sort((a, b) => a.date < b.date ? -1 : 1);
+}
+// "Complete-ish" nights for averages: exclude the in-progress current night
+function pastNights() {
+  const curr = currentNightDate();
+  return recordedNights().filter(n => {
+    if (n.date === curr && n.start && !n.end) return false; // in progress
+    return (n.wakes && n.wakes.length) || n.end;
+  });
+}
+
+// ============== Render: Nit tab ==============
+function render() {
+  renderNightTab();
+  renderHistory();
+}
+
+function renderNightTab() {
+  const curr = currentNightDate();
+  const date = viewedDate || curr;
+  const isCurrent = date === curr;
+  const night = getNight(date);
+  const active = night && night.start && !night.end && date === curr;
+
+  // Nav
+  updateNav(date, curr);
+
+  // Active banner
+  const banner = document.getElementById('activeBanner');
+  const startBtn = document.getElementById('startNightBtn');
+  const endBtn = document.getElementById('endNightBtn');
+  if (active) {
+    banner.style.display = 'flex';
+    document.getElementById('activeSince').textContent = 'Des de les ' + night.start;
+    const startMs = eventDate(night, night.start).getTime();
+    const min = Math.max(0, Math.round((Date.now() - startMs) / 60000));
+    document.getElementById('activeDur').textContent = fmtDur(min) + ' de nit';
+    endBtn.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+    endBtn.style.display = 'none';
+  }
+
+  // Start button: show only for current night when not started
+  if (isCurrent && (!night || !night.start)) {
+    startBtn.style.display = 'flex';
+  } else {
+    startBtn.style.display = 'none';
+  }
+
+  // Time fields
+  document.getElementById('nightStart').value = night && night.start ? night.start : '';
+  document.getElementById('nightEnd').value = night && night.end ? night.end : '';
+
+  // Stats
+  const st = night ? nightStats(night) : { wakeCount: 0, feedCount: 0, totalMl: 0, longestStretch: null };
+  document.getElementById('statWakes').textContent = night ? st.wakeCount : '—';
+  document.getElementById('statFeeds').textContent = night ? st.feedCount : '—';
+  document.getElementById('statMl').textContent = night ? st.totalMl : '—';
+  document.getElementById('statStretch').textContent = st.longestStretch != null ? fmtDur(st.longestStretch) : '—';
+  document.getElementById('statWakesSub').textContent = isCurrent ? 'aquesta nit' : 'aquella nit';
+
+  // Wake list
+  renderWakeList(date, night);
+
+  // 7-night averages
+  const past = pastNights().slice(-7);
+  if (past.length > 0) {
+    const totalWakes = past.reduce((s, n) => s + nightStats(n).wakeCount, 0);
+    const totalMl = past.reduce((s, n) => s + nightStats(n).totalMl, 0);
+    document.getElementById('avgWakes').textContent = (totalWakes / past.length).toFixed(1);
+    document.getElementById('avgMl').textContent = Math.round(totalMl / past.length);
+    document.getElementById('avgWakesSub').textContent = 'últimes ' + past.length + (past.length === 1 ? ' nit' : ' nits');
+  } else {
+    document.getElementById('avgWakes').textContent = '—';
+    document.getElementById('avgMl').textContent = '—';
+  }
+}
+
+function updateNav(date, curr) {
+  const titleEl = document.getElementById('navTitle');
+  const subEl = document.getElementById('navSub');
+  const prevBtn = document.getElementById('navPrev');
+  const nextBtn = document.getElementById('navNext');
+  const isCurrent = date === curr;
+  if (isCurrent) {
+    titleEl.textContent = 'Aquesta nit';
+    titleEl.className = 'day-nav-title';
+  } else {
+    const diff = Math.round((new Date(curr + 'T12:00:00') - new Date(date + 'T12:00:00')) / 86400000);
+    let label;
+    if (diff === 1) label = 'Nit anterior';
+    else label = 'Fa ' + diff + ' nits';
+    titleEl.textContent = label;
+    titleEl.className = 'day-nav-title past';
+  }
+  subEl.textContent = 'Nit del ' + formatNightDate(date);
+
+  // sync calendar inputs
+  const calMax = curr;
+  ['navCalInput', 'navCalLabel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = date; el.max = calMax; }
+  });
+
+  nextBtn.disabled = date >= curr;
+  const rec = recordedNights();
+  const earliest = rec.length ? rec[0].date : null;
+  prevBtn.disabled = earliest ? date <= earliest && !getNight(addDays(date, -1)) : false;
+}
+
+function renderWakeList(date, night) {
+  const listEl = document.getElementById('wakeList');
+  const wakes = night ? sortedWakes(night) : [];
+  if (wakes.length === 0) {
+    listEl.innerHTML = '<li class="wake-empty">Cap despertar registrat. Fes servir "+ Despertar".</li>';
+    return;
+  }
+  listEl.innerHTML = '';
+  wakes.forEach((w, i) => {
+    const li = document.createElement('li');
+    li.className = 'wake-row';
+    const mlZero = (w.ml || 0) === 0 ? 'zero' : '';
+    li.innerHTML =
+      '<span class="wake-num">' + (i + 1) + '</span>' +
+      '<input type="text" inputmode="numeric" pattern="[0-9:]*" maxlength="5" placeholder="HH:MM" autocomplete="off" value="' + w.time + '" data-id="' + w.id + '" class="wake-time ttime">' +
+      '<div class="wake-ml-wrap">' +
+        '<input type="number" inputmode="numeric" min="0" max="400" value="' + (w.ml || 0) + '" data-id="' + w.id + '" class="wake-ml ' + mlZero + '" aria-label="ml">' +
+        '<span class="wake-ml-unit">ml</span>' +
+      '</div>' +
+      '<button class="wake-del" data-id="' + w.id + '" aria-label="Esborrar">×</button>';
+    listEl.appendChild(li);
+  });
+  // wire inputs
+  listEl.querySelectorAll('.wake-time').forEach(inp => {
+    attachTimeMask(inp, (norm) => {
+      const n = getNight(date); if (!n) return;
+      const w = n.wakes.find(x => x.id === inp.dataset.id);
+      if (w && norm) { w.time = norm; saveData(); render(); }
+    });
+  });
+  listEl.querySelectorAll('.wake-ml').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const n = getNight(date); if (!n) return;
+      const w = n.wakes.find(x => x.id === inp.dataset.id);
+      if (w) { w.ml = Math.max(0, parseInt(inp.value, 10) || 0); saveData(); render(); }
+    });
+  });
+  listEl.querySelectorAll('.wake-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const n = getNight(date); if (!n) return;
+      n.wakes = n.wakes.filter(x => x.id !== btn.dataset.id);
+      pruneEmpty();
+      saveData(); render();
+    });
+  });
+}
+
+// ============== Render: History ==============
+function renderHistory() {
+  const past = pastNights();
+
+  // Trend: this week vs previous week (7-night windows)
+  const last7 = past.slice(-7);
+  const prev7 = past.slice(-14, -7);
+  function avg(arr, fn) { return arr.length ? arr.reduce((s, n) => s + fn(n), 0) / arr.length : null; }
+  const w1 = avg(last7, n => nightStats(n).wakeCount);
+  const w0 = avg(prev7, n => nightStats(n).wakeCount);
+  const m1 = avg(last7, n => nightStats(n).totalMl);
+  const m0 = avg(prev7, n => nightStats(n).totalMl);
+
+  document.getElementById('trendWakes').textContent = w1 != null ? w1.toFixed(1) : '—';
+  document.getElementById('trendMl').textContent = m1 != null ? Math.round(m1) : '—';
+  setDelta('trendWakesDelta', w1, w0, 1);
+  setDelta('trendMlDelta', m1, m0, 0);
+
+  // Chart
+  renderChart();
+
+  // List
+  const listEl = document.getElementById('nightsList');
+  const rec = recordedNights().slice().reverse();
+  if (rec.length === 0) {
+    listEl.innerHTML = '<div class="night-empty">Encara no hi ha nits registrades.</div>';
+    return;
+  }
+  listEl.innerHTML = '';
+  const maxWakes = Math.max(...rec.map(n => nightStats(n).wakeCount), 1);
+  rec.forEach(n => {
+    const st = nightStats(n);
+    const wakes = sortedWakes(n);
+    let dots = '';
+    wakes.forEach(w => { dots += '<span class="night-dot ' + ((w.ml || 0) > 0 ? 'feed' : '') + '"></span>'; });
+    if (wakes.length === 0) dots = '<span style="font-size:11px;color:var(--good);">nit seguida ✓</span>';
+    const row = document.createElement('div');
+    row.className = 'night-row';
+    row.dataset.date = n.date;
+    row.innerHTML =
+      '<span class="night-date">' + formatNightDate(n.date) + '</span>' +
+      '<div class="night-bar-wrap"><div class="night-dots">' + dots + '</div></div>' +
+      '<span class="night-meta">' + st.wakeCount + (st.wakeCount === 1 ? ' desp.' : ' desp.') +
+        '<span class="small">' + (st.totalMl > 0 ? st.totalMl + ' ml' : 'sense presa') + '</span></span>';
+    row.addEventListener('click', () => {
+      viewedDate = n.date;
+      switchTab('night');
+    });
+    listEl.appendChild(row);
+  });
+}
+
+function setDelta(elId, cur, prev, decimals) {
+  const el = document.getElementById(elId);
+  if (cur == null || prev == null) { el.textContent = 'sense comparació'; el.className = 'trend-delta flat'; return; }
+  const d = cur - prev;
+  if (Math.abs(d) < (decimals === 0 ? 3 : 0.15)) { el.textContent = '≈ igual'; el.className = 'trend-delta flat'; return; }
+  const arrow = d < 0 ? '↓' : '↑';
+  const cls = d < 0 ? 'down' : 'up'; // down = good (fewer wakeups/ml)
+  el.textContent = arrow + ' ' + Math.abs(d).toFixed(decimals) + (decimals === 0 ? ' ml' : '') + ' vs setm. anterior';
+  el.className = 'trend-delta ' + cls;
+}
+
+// ============== Chart ==============
+function metricValue(night, metric) {
+  const st = nightStats(night);
+  if (metric === 'wakes') return st.wakeCount;
+  if (metric === 'ml') return st.totalMl;
+  if (metric === 'stretch') return st.longestStretch != null ? st.longestStretch / 60 : null; // hours
+  return null;
+}
+function metricFmt(v, metric) {
+  if (metric === 'wakes') return v.toFixed(1);
+  if (metric === 'ml') return Math.round(v) + ' ml';
+  if (metric === 'stretch') { const h = Math.floor(v); const m = Math.round((v - h) * 60); return h + 'h' + (m < 10 ? '0' : '') + m; }
+  return v;
+}
+function metricColor(metric) {
+  return metric === 'ml' ? 'var(--bottle)' : metric === 'stretch' ? 'var(--good)' : 'var(--sleep)';
+}
+
+function movingAvg(vals, win) {
+  return vals.map((_, i) => {
+    const s = Math.max(0, i - win + 1);
+    const slice = vals.slice(s, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / slice.length;
+  });
+}
+
+function renderChart() {
+  const area = document.getElementById('chartArea');
+  const past = pastNights();
+  let series = past.map(n => ({ date: n.date, value: metricValue(n, chartMetric) }))
+    .filter(x => x.value != null && !isNaN(x.value));
+  if (chartPeriod < 9999) series = series.slice(-chartPeriod);
+
+  if (series.length < 2) {
+    area.innerHTML = '<div class="chart-empty">Calen almenys 2 nits amb dades en aquest període.</div>';
+    return;
+  }
+
+  const values = series.map(s => s.value);
+  const trend = movingAvg(values, Math.min(7, Math.max(2, Math.floor(series.length / 4))));
+  const minV = Math.min(...values), maxV = Math.max(...values);
+  const range = (maxV - minV) || 1;
+  const yMin = minV - range * 0.15, yMax = maxV + range * 0.15;
+  const yRange = (yMax - yMin) || 1;
+
+  const W = 320, H = 150, padL = 8, padR = 8, padT = 12, padB = 22;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const x = i => padL + (series.length === 1 ? plotW / 2 : (i / (series.length - 1)) * plotW);
+  const y = v => padT + (1 - (v - yMin) / yRange) * plotH;
+
+  const color = metricColor(chartMetric);
+  let daily = '', trendPath = '', dots = '';
+  series.forEach((s, i) => { daily += (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ',' + y(s.value).toFixed(1) + ' '; });
+  trend.forEach((v, i) => { trendPath += (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ',' + y(v).toFixed(1) + ' '; });
+  series.forEach((s, i) => { dots += '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(s.value).toFixed(1) + '" r="2.5" fill="' + color + '" opacity="0.7"></circle>'; });
+
+  const avg = values.reduce((a, b) => a + b, 0) / values.length;
+  const svg =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" class="chart-svg" preserveAspectRatio="xMidYMid meet">' +
+      '<line x1="' + padL + '" y1="' + y(avg).toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y(avg).toFixed(1) + '" class="chart-avg-line"></line>' +
+      '<path d="' + daily + '" class="chart-daily-line" style="stroke:' + color + '"></path>' +
+      '<path d="' + trendPath + '" class="chart-trend-line" style="stroke:' + color + '"></path>' +
+      dots +
+    '</svg>' +
+    '<div class="chart-axis-dates"><span>' + formatNightDate(series[0].date) + '</span><span>' + formatNightDate(series[series.length - 1].date) + '</span></div>' +
+    '<div class="chart-legend">' +
+      '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:' + color + ';opacity:.5"></span>valor per nit</span>' +
+      '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:' + color + '"></span>tendència</span>' +
+      '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:var(--text-dim)"></span>mitjana ' + metricFmt(avg, chartMetric) + '</span>' +
+    '</div>';
+  area.innerHTML = svg;
+}
+
+// ============== Tab switching ==============
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  render();
+}
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => switchTab(t.dataset.tab));
+});
+
+// ============== Actions ==============
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// Start night (current)
+document.getElementById('startNightBtn').addEventListener('click', () => {
+  const date = currentNightDate();
+  const n = ensureNight(date);
+  n.start = nowTime();
+  n.end = null;
+  saveData();
+  viewedDate = null;
+  showToast('Nit començada ☾');
+  render();
+});
+
+// Start/end "ara" buttons in the card
+document.getElementById('startNow').addEventListener('click', () => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  n.start = nowTime();
+  saveData(); render();
+});
+document.getElementById('endNow').addEventListener('click', () => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  n.end = nowTime();
+  saveData(); showToast('Nit tancada ✓'); render();
+});
+document.getElementById('endNightBtn').addEventListener('click', () => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  n.end = nowTime();
+  saveData(); showToast('Bon dia! Nit tancada ✓'); render();
+});
+
+// Manual edits of start/end fields
+attachTimeMask(document.getElementById('nightStart'), (norm) => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  n.start = norm;
+  pruneEmpty(); saveData(); render();
+});
+attachTimeMask(document.getElementById('nightEnd'), (norm) => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  n.end = norm;
+  pruneEmpty(); saveData(); render();
+});
+
+// Add wakeup
+document.getElementById('addWakeBtn').addEventListener('click', () => {
+  const date = viewedDate || currentNightDate();
+  const n = ensureNight(date);
+  // Default time: now if viewing current night, else a sensible night time
+  const defTime = (date === currentNightDate()) ? nowTime() : '03:00';
+  n.wakes = n.wakes || [];
+  n.wakes.push({ id: genId(), time: defTime, ml: 0 });
+  saveData();
+  render();
+  // Focus the new row's time input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#wakeList .wake-time');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }, 50);
+});
+
+// ============== Day navigation ==============
+document.getElementById('navPrev').addEventListener('click', () => {
+  const date = viewedDate || currentNightDate();
+  viewedDate = addDays(date, -1);
+  render();
+});
+document.getElementById('navNext').addEventListener('click', () => {
+  const curr = currentNightDate();
+  const date = viewedDate || curr;
+  if (date >= curr) return;
+  const next = addDays(date, 1);
+  viewedDate = next >= curr ? null : next;
+  render();
+});
+['navCalInput', 'navCalLabel'].forEach(id => {
+  document.getElementById(id).addEventListener('change', (e) => {
+    const curr = currentNightDate();
+    const val = e.target.value;
+    if (!val) return;
+    viewedDate = val >= curr ? null : val;
+    render();
+  });
+});
+
+// ============== Chart controls ==============
+document.querySelectorAll('.metric-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    chartMetric = b.dataset.metric;
+    document.querySelectorAll('.metric-btn').forEach(x => {
+      x.classList.remove('active', 'ml', 'wake');
+    });
+    b.classList.add('active');
+    if (chartMetric === 'ml') b.classList.add('ml');
+    else if (chartMetric === 'wakes') b.classList.add('wake');
+    renderChart();
+  });
+});
+// restore metric button color classes on load
+document.querySelector('.metric-btn[data-metric="wakes"]').classList.add('wake');
+document.querySelectorAll('.chart-period-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    chartPeriod = parseInt(b.dataset.period, 10);
+    document.querySelectorAll('.chart-period-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderChart();
+  });
+});
+
+// ============== Export / Import ==============
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  const json = JSON.stringify({ version: 1, app: 'gala-nits', exportedAt: new Date().toISOString(), nights: nights }, null, 2);
+  const filename = 'gala_nits_' + todayISO() + '.json';
+
+  // Preferred on iPhone: the share sheet (save to Files, send by mail, etc.)
+  try {
+    if (navigator.canShare) {
+      const file = new File([json], filename, { type: 'application/json' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Nits de la Gala' });
+        showToast('Dades compartides ✓');
+        return;
+      }
+    }
+  } catch (err) {
+    // user cancelled the share sheet, or share failed — fall through to download
+    if (err && err.name === 'AbortError') return;
+  }
+
+  // Fallback: classic download (anchor must be in the DOM; revoke must be delayed)
+  try {
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 4000);
+    showToast('Dades exportades ✓');
+  } catch (err2) {
+    // Last resort: open the JSON in a new tab so it can be copied/saved manually
+    try {
+      const w = window.open('', '_blank');
+      if (w) { w.document.title = filename; w.document.body.innerText = json; showToast('Còpia les dades des de la pestanya nova'); }
+      else showToast('No s\'ha pogut exportar');
+    } catch (e3) { showToast('No s\'ha pogut exportar'); }
+  }
+});
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importInput').click());
+document.getElementById('importInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const text = ev.target.result.trim();
+      if (text.startsWith('{')) {
+        // JSON export from this app
+        const data = JSON.parse(text);
+        if (Array.isArray(data.nights)) {
+          if (!confirm('Importar ' + data.nights.length + ' nits? (substituirà les dades actuals)')) return;
+          nights = data.nights;
+          saveData(); render();
+          showToast(data.nights.length + ' nits importades ✓');
+        } else { alert('Fitxer sense dades de nits.'); }
+        return;
+      }
+      // CSV of feeds (date,time,qty) → build nights from night feeds
+      const imported = importFromFeedCSV(text);
+      if (imported > 0) {
+        saveData(); render();
+        showToast(imported + ' nits creades des del CSV ✓');
+      } else {
+        alert('No he trobat preses nocturnes al CSV.');
+      }
+    } catch (err) { alert('Error: ' + err.message); }
+  };
+  reader.readAsText(file);
+});
+
+// Build nights from a feeds CSV (date,time,qty). A feed counts as a night wakeup if
+// time >= 22:00 or < 07:00 (core night, excludes the bedtime feed and the morning feed).
+// The night's evening date: if time >= 22:00 → same date; if < 07:00 → previous date.
+const IMPORT_NIGHT_START = 22 * 60; // 22:00
+const IMPORT_NIGHT_END = 7 * 60;    // 07:00
+function importFromFeedCSV(text) {
+  const lines = text.split(/\r?\n/);
+  const map = {}; // date -> night
+  let created = 0;
+  for (let i = 1; i < lines.length; i++) {
+    const parts = lines[i].split(',');
+    if (parts.length < 3) continue;
+    const date = parts[0].trim(), time = parts[1].trim(), qty = parseInt(parts[2], 10);
+    if (!date || !time || isNaN(qty)) continue;
+    const min = timeToMin(time);
+    const isNight = min >= IMPORT_NIGHT_START || min < IMPORT_NIGHT_END;
+    if (!isNight) continue;
+    const eveningDate = min >= IMPORT_NIGHT_START ? date : addDays(date, -1);
+    if (!map[eveningDate]) {
+      map[eveningDate] = { id: genId(), date: eveningDate, start: null, end: null, wakes: [] };
+      created++;
+    }
+    map[eveningDate].wakes.push({ id: genId(), time: time, ml: qty });
+  }
+  if (created === 0) return 0;
+  if (!confirm('He trobat ' + created + ' nits amb preses entre les 22:00 i les 07:00 al CSV. Vols afegir-les? (es combinaran amb les existents; després pots ajustar cada nit)')) return 0;
+  // Merge into existing nights (by date)
+  Object.values(map).forEach(nn => {
+    const existing = getNight(nn.date);
+    if (existing) {
+      existing.wakes = (existing.wakes || []).concat(nn.wakes);
+    } else {
+      nights.push(nn);
+    }
+  });
+  return created;
+}
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (confirm('Segur que vols esborrar TOTES les nits? (recomanat exportar abans)')) {
+    nights = [];
+    saveData(); viewedDate = null; render();
+    showToast('Tot esborrat');
+  }
+});
+
+// Live update of the active-night counter
+setInterval(() => {
+  const banner = document.getElementById('activeBanner');
+  if (banner && banner.style.display !== 'none') {
+    const date = currentNightDate();
+    const n = getNight(date);
+    if (n && n.start && !n.end) {
+      const min = Math.max(0, Math.round((Date.now() - eventDate(n, n.start).getTime()) / 60000));
+      document.getElementById('activeDur').textContent = fmtDur(min) + ' de nit';
+    }
+  }
+}, 60000);
+
+// ============== Init ==============
+loadData();
+render();
+</script>
+</body>
+</html>
